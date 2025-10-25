@@ -3,6 +3,8 @@ project:
 
 website:
   title: "Learning, Thinking, and Coding"
+  site-url: https://brianrepko.github.io/blog
+  description: "Brian Repko's blog"
   navbar:
     right:
       - icon: house-fill
@@ -13,11 +15,13 @@ website:
         href: https://hachyderm.io/@brianrepko
       - icon: linkedin
         href: https://www.linkedin.com/in/brianrepko/
+      - icon: rss
+        href: index.xml
 
 format:
   html:
     theme:
-      - cosmo
+      - sandstone
       - brand
     css: styles.css
 
