@@ -5,6 +5,7 @@ website:
   title: "Learning, Thinking, and Coding"
   site-url: https://brianrepko.github.io/blog
   description: "Brian Repko's blog"
+  favicon: favicon.ico
   navbar:
     right:
       - icon: house-fill
