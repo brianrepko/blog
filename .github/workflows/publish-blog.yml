@@ -1,0 +1,36 @@
+name: publish-blog
+
+on:
+  push:
+    branches: main
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pages: write
+      id-token: write
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Setup Quarto
+        uses: quarto-dev/quarto-actions/setup@v2
+        with:
+          tinytex: true
+
+      - name: Install dependencies
+        run: |
+          # Example for R dependencies
+          # R -e "install.packages('renv')"
+          # R -e "renv::restore()"
+        
+      - name: Render blog
+        run: quarto render
+
+      - name: Publish blog
+        uses: quarto-dev/quarto-actions/publish@v2
+        with:
+          target: gh-pages
