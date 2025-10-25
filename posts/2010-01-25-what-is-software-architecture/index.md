@@ -1,0 +1,14 @@
+---
+title: "What is software architecture?"
+date: 2010-01-25
+categories: 
+  - "architecture"
+---
+
+[![](images/teaching.gif "teaching")](http://brianrepko.wordpress.com/wp-content/uploads/2010/01/teaching.gif)Lots of folks that don't know what I do (and some that do) will often ask what is a software architect? What is software architecture?
+
+My short answer is that **software architecture answers all the "how do I <fill-in-the-blank>" (or "how does it?") questions that come up on a software development project**.  I'm a fan of the concepts behind the [4+1 model of software architecture](http://en.wikipedia.org/wiki/4%2B1_Architectural_View_Model) - that there are various categories (views) of these questions all answered as the team works through the functional requirements (scenarios).  I can never remember what the actual 4 views are - but one of the main categories is about how development is done (the development view), or where code is actually deployed and running (the physical view) to how layers of the software work together (the logical view) and then there is some other one...which is where I lump all the "how does the system do X" answers (I think its the process view - and yes, I'm too lazy to google it right now).
+
+When you look at all the "how do I" questions that come up - there are lots - but they are all architecture. This can literally be something as simple as "how do I add logging to this system?" with simple answers - we are using SLF4J on Log4J.  Which can then lead into deeper questions (how do I change logging levels at runtime?  how is logging started and shutdown in this system?)...up to the "standard" stuff that architects typically focus on - "how does the solution provide for scalable performance?", etc.
+
+But in the end, whenever I hear a "how do I" or "how does it" question - that is architecture - and a potential teaching moment.  In my opinion, architects should be doing what the other team members are doing (coding/testing) in order to be effective. And really good architects teach.

@@ -1,0 +1,20 @@
+---
+title: "Making Ant 1.8 work like Maven - not so much"
+date: 2010-02-19
+---
+
+I've done Ant build files in the past that ended up working like Maven2. Mostly since it was a non-Maven shop but also because it was a way to get folks into Maven-think but by using Ant.
+
+Now, [Ant 1.8](http://ant.apache.org/) has been released and with it some new features that could potentially make it possible to have very modular Ant builds that would be even better than Maven2. One of the main concepts within Maven2 is the various [lifecycles](http://maven.apache.org/guides/introduction/introduction-to-the-lifecycle.html) (clean, build/default and site) and that build tasks from plugins are bound to various parts of the lifecycle. Ant 1.8 introduced the notion of [extension-points and extensionOf](http://ant.apache.org/manual/targets.html) as well as [imports](http://ant.apache.org/manual/CoreTasks/import.html) and local properties - these could all be used to both create plugins (macrodefs) and our own lifecycles (sets of extension-points) and then bind them all up together in a build.xml and just import what you need - potentially from an http URL.
+
+Well, that was the thought...
+
+Turns out that imports are processed after the build.xml is parsed. That's all well and good, but when an extensionOf attribute is parsed, Ant looks for the target(s) named in the extensionOf value in order to add the current target as a dependency. That requires that the target has to exist in the project and if that target is part of an import (as the documentation seems to suggest), then the target doesn't exist (yet) at the time of parsing and you get a nice error message to that effect.
+
+I think that this is a design flaw in how extension-point / extensionOf is supposed to work and contradicts the example cited in the documentation - which doesn't work.
+
+Its too bad because with these features, I could define my own lifecycles or even change/modify the existing ones from Maven2 to do things related to database SQL modules (create the database from all the SQL scripts and some data files) or be able to mix the SQL and java files together in the same module and add phases to the lifecycle related to database setup. This has always been something that I have to hack up the pom for anyway - which is part of why I like going back to Ant - I can change it easier when I need to.
+
+Work-arounds? Change the ProjectHelper/TargetHelper to deal with extensionOf attributes after the import stack is popped (and all the targets are resolved) or import the extensionOfs (the bindings or which macros get called for each step) after the extension-points are imported. I'm not a fan of the latter as I really think that the bindings are the build - execute these steps for these lifecycle stages - but if my build is just a bunch of imports, that's not the worst of it. Or screw the use of extension-points/extensionOf and just use imports with empty targets (which is kind of what extension-points are - except that I could then create a target that gets bound to multiple extension-points with extensionOf="target1,target2").
+
+It does sadden me that the example cited doesn't even work however. If I get this working, I'll post the example.

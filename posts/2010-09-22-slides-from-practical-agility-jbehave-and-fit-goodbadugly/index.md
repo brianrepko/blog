@@ -1,0 +1,9 @@
+---
+title: "Slides from Practical Agility - JBehave and FIT - Good/Bad/Ugly"
+date: 2010-09-22
+categories: 
+  - "agile"
+  - "java"
+---
+
+I presented a "Lightning Talk" (6 minutes) at the last Practical Agility meeting on "JBehave and FIT - the Good, the Bad and the Ugly". For the talk everything was on NEON cards (neon-green, neon-yellow and neon-red! - its all I could find at Walgreens) and before throwing them out thought that I would put them into powerpoint (minus the neon) and share. Slides are up on [SlideShare](http://www.slideshare.net/brianrepko/fit-and-j-behave) - but you might want to download as all the notes are in the notes section. Enjoy!

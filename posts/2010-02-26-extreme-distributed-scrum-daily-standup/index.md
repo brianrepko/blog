@@ -1,0 +1,16 @@
+---
+title: "extreme distributed scrum - daily standup"
+date: 2010-02-26
+categories: 
+  - "agile"
+---
+
+I've worked on Scrum teams where 1/2 the team is in one location and 1/2 in another (both offshore and onshore) and every now and then we would use an IM conference in order to have a "standup" (except that we are sitting and on IM). We tried video and phone conferencing as well but given the lag in the network as well as lack of equipment and network availability, IM seemed to just work better. IM allowed for give-and-take (with some lag _but a lag we were familiar with_) and was always available. In addition, IM allowed the conversation to be sent via email for later reading and sharing (to the 1/2 of the team that wasn't in yet). Since then, I've wondered about what technology tools one would need if the team was completely separated (think rock stars all working from home).
+
+If all the team members were located in their own location - how would I set this up? The kicker here is the mess of timezones that might be in the mix. Obviously, I'd have a wiki and perhaps an agile PM (kanban/scrum) web app running somewhere that we could all access in our timezone. When folks are distributed and have an overlapping time, then can use VNC (or other free solutions like that) to "pair-up" as needed. Likewise, VoIP/IM conferences or just VoIP/IM for issues and/or questions.
+
+But how to do "standups" when there isn't a time that everyone can standup? How to let someone know you are stuck on something and how to hand off a potential solution to someone that will get it hours later. My insight was that a team could host an **internal blog/Twitter** to share what they did yesterday, what they are doing today and what issues are blocking them. Status updates ("working on X" or "can't figure out Y") can then really be done at anytime and those folks that are online can help step in. Some IM systems have a status but I'm not sure that that is very visible. **Add an RSS feed on top** of the teams blogs (like twitter) a[![](images/twitterrssfeed1-main_full.jpg "TwitterRSSFeed1-main_Full")](http://brianrepko.wordpress.com/wp-content/uploads/2010/02/twitterrssfeed1-main_full.jpg)nd you'll start to see team collaboration. Start your day by reading all the updates from folks since you were last on. The whole project life could be read if you really wanted too - like emailing the IM discussion. Still doesn't help with the I have an issue with X and what a potential solution might be (hours later). I could see the wiki or issue tracking system kind of work in that space. In this scenario, the world of "standup" starts to look like "status" - but that might be ok just given the realities of multiple people in multiple timezones. I thought that it would be an interesting way to run a project without standups.
+
+Iteration and release planning would be difficult in this situation - that might just have to be done together.
+
+I've not had this situation - have you? What worked or didn't work?
