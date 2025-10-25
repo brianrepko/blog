@@ -1,0 +1,353 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss  xmlns:atom="http://www.w3.org/2005/Atom" 
+      xmlns:media="http://search.yahoo.com/mrss/" 
+      xmlns:content="http://purl.org/rss/1.0/modules/content/" 
+      xmlns:dc="http://purl.org/dc/elements/1.1/" 
+      version="2.0">
+<channel>
+<title>Learning, Thinking, and Coding</title>
+<link>https://brianrepko.github.io/blog/</link>
+<atom:link href="https://brianrepko.github.io/blog/index.xml" rel="self" type="application/rss+xml"/>
+<description>Brian Repko&#39;s blog</description>
+<generator>quarto-1.8.25</generator>
+<lastBuildDate>Tue, 09 Apr 2019 00:00:00 GMT</lastBuildDate>
+<item>
+  <title>Snowflake for Biomedical Research</title>
+  <dc:creator>Brian Repko</dc:creator>
+  <link>https://brianrepko.github.io/blog/posts/2019-04-09-snowflake-for-biomedical-research/</link>
+  <description><![CDATA[ 
+
+
+
+
+
+<p>I’ve since left biomedical research (the Genomics team at Novartis Institutes for Biomedical Research - NIBR) and am now doing health analytics with Carrot Health. At Carrot Health, we are making use of Snowflake Computing as our data storage and query system. I love Snowflake and there are so many features that make it better than what we had at NIBR. In the spirit of <a href="https://www.snowflake.com/blog/top-10-cool-things-i-like-about-snowflake/">“Top 10 Cool Things I Like About Snowflake”,</a> I bring you my 10 reasons that Snowflake works for biomedical research.</p>
+<p>Reason 1 - All in the Cloud (AWS or Azure) - no DBA, no hardware, no tuning.</p>
+<p>You can be up and running instantly in your cloud of choice. There are even safety features like UNDROP, should you DROP a table or view by mistake. For bio folks - if you are a small lab and don’t have DBAs and hardware admins, etc., then no problem. And if you do, then the security features (below) should be enough to get your IT department to buy-in.</p>
+<p>Reason 2 - Persistent (cached) results (with a visual execution plan)</p>
+<p>In Snowflake, if you (or anyone) executes a query with a result set, that result is cached and used either in other query plans or as a direct result with the same SQL. This might mean that the first time you execute a query it might need some horsepower, but then for 24 hours after that, you’ll get that data back instantly. This is great for bio folks that are typically working on a particular project’s data - joined with large public datasets. Those can be cached for a while and then when you are on to the next project, they will just get removed from cache. And if you aren’t sure, you can easily go into Query History and look at the visual execution plan.</p>
+<p>Reason 3 - The functions you need - pivot / unpivot, analytic functions and UDFs</p>
+<p>Let’s face it - bio folks like their data in matrix form sometimes - pivot and unpivot in the database is great. Having the ability to do a wide variety of analytic functions can help with basic statistics. And having the ability to add your own functions is great too - but ECMAscript only.</p>
+<p>Reason 4 - JSON in SQL</p>
+<p>Snowflake supports a VARIANT column type that can hold JSON data and it has the SQL extensions to query that data. This is super useful for mixing structured and semi-structured data together. And that is key for aggregating bio data - because we can almost agree on most of the structure but then everyone has their extra data that they want to keep.</p>
+<p>Reason 5 - Can connect from anything</p>
+<p>Snowflake supports ODBC, JDBC, Python, Spark, a web console, and it’s own snowsql command. You can basically use any tool to get connected. We were able to easily add support for SchemaSpy and Flyway (JDBC-based tools) for Snowflake - and I typically use DbVisualizer (JDBC) to access it.</p>
+<p>Reason 6 - Like a data lake but with SQL</p>
+<p>Snowflake has amazing capabilities to both load and unload data to and from S3 (we are in AWS and now Azure) and it’s fast. You can regularly point it at a folder and it knows which files have already been loaded. And you can define that process to happen automagically. There are some file formats that it doesn’t support out of the box - I’ve had to convert some fixed width data to separated-values - but that is minor compared to the built-in infrastructure. For bio folks, I think that this is awesome - getting scientists to put their data in S3 is far easier than helping them get it into the database.</p>
+<p>Reason 7 - Data Sharing, Data Cloning, and Time Travel</p>
+<p>Snowflake has the ability to share databases between accounts. This means that someday, we could have reference data already loaded (once) in Snowflake and have everyone share it. Or results of a consortium’s work could be shared once. Sharing WITH SQL access. There is also the ability to quickly clone data which is another way that one can share data / parts of data (or promote data from QA to PROD). Snowflake, like Datomic, also has the ability to return results based on the data at a given time. For bio folks, this is exactly what is needed for reproducible research - and/or - for data that changes over time but you don’t want to deal with formal versioning.</p>
+<p>Reason 8 - Multiple Databases and Schemas</p>
+<p>Snowflake is one of the few systems that supports multiple databases with multiple schemas in them. And all SQL can cross databases and schemas. This helps tremendously with data organization and potentially with role-based sharing rights. And security doesn’t stop there - data is encrypted at rest and in transit and you can even lock down access to your own AWS PrivateLink so traffic never leaves your combined data center / AWS cloud. Snowflake is HIPAA and SOC2 compliant as well.</p>
+<p>Reason 9 - Scaling compute vs scaling storage</p>
+<p>With Snowflake, the SQL execution “cluster” is called a “warehouse” (horrible name, I know, but there you are). One can size (and resize) a warehouse for the queries at hand - thus having the ability to scale at will as needed (there are even warehouse clusters to get you even more compute if you need). You pay separately for storage and compute but you have tremendous control over it (and access to the accounting). You can even has department only warehouses to enable chargeback policies.</p>
+<p>Reason 10 - the bleeding edge is available</p>
+<p>Snowflake supports parquet files as well. It would be awesome to try and use ADAM-formatted data - or heck, run a whole Big Data Genomics variant calling pipeline directly on the database. Or could be fun to try a version of hail.is directly on the database. This is something I’d love to see people try - and is only do-able in Snowflake.</p>
+<p>So there are my 10 - please feel free comment or email me at brian -dot- repko -at- learnthinkcode -dot- com. I should add that I’m writing this as a way to share my experience with my past co-workers and Snowflake has not asked for this or is supporting this in anyway. My thoughts and opinions only.</p>
+
+
+
+ ]]></description>
+  <category>architecture</category>
+  <category>bioinformatics</category>
+  <guid>https://brianrepko.github.io/blog/posts/2019-04-09-snowflake-for-biomedical-research/</guid>
+  <pubDate>Tue, 09 Apr 2019 00:00:00 GMT</pubDate>
+</item>
+<item>
+  <title>Blogging again…with a change of focus</title>
+  <dc:creator>Brian Repko</dc:creator>
+  <link>https://brianrepko.github.io/blog/posts/2014-09-28-blogging-again-with-a-change-of-focus/</link>
+  <description><![CDATA[ 
+
+
+
+
+
+<p>A few years back, I noticed a friend’s LinkedIn update that he was working for Entagen, a company doing life sciences work in the Twin Cities. And I knew that I had to jump at the chance to get into life science programming.&nbsp; I was subcontracted to do some work at Novartis - the research branch in particular (NIBR) and then quickly found myself working on a project to manage and merge all public genomic data. I’m so thankful to the people that made that all happen.</p>
+<p>And I’ve never looked back. It’s been 3 years, a move to a new country (Switzerland) and a new disease area (Oncology) and I love my work. I love learning the science and seeing where good software engineering can make a difference. If “bioinformatician” means a “software engineer that uses their knowledge of biology” - then I now call myself a bioinformatician.</p>
+<p>It’s been a while since I was blogging - but I’m going to start up again. However, the blog will be more focused on the state of software engineering in the life sciences (from my one perspective) and where technology is going in this space. Stay tuned…</p>
+
+
+
+ ]]></description>
+  <category>bioinformatics</category>
+  <guid>https://brianrepko.github.io/blog/posts/2014-09-28-blogging-again-with-a-change-of-focus/</guid>
+  <pubDate>Sun, 28 Sep 2014 00:00:00 GMT</pubDate>
+</item>
+<item>
+  <title>Slides from Practical Agility - JBehave and FIT - Good/Bad/Ugly</title>
+  <dc:creator>Brian Repko</dc:creator>
+  <link>https://brianrepko.github.io/blog/posts/2010-09-22-slides-from-practical-agility-jbehave-and-fit-goodbadugly/</link>
+  <description><![CDATA[ 
+
+
+
+
+
+<p>I presented a “Lightning Talk” (6 minutes) at the last Practical Agility meeting on “JBehave and FIT - the Good, the Bad and the Ugly”. For the talk everything was on NEON cards (neon-green, neon-yellow and neon-red! - its all I could find at Walgreens) and before throwing them out thought that I would put them into powerpoint (minus the neon) and share. Slides are up on <a href="http://www.slideshare.net/brianrepko/fit-and-j-behave">SlideShare</a> - but you might want to download as all the notes are in the notes section. Enjoy!</p>
+
+
+
+ ]]></description>
+  <category>agile</category>
+  <category>java</category>
+  <guid>https://brianrepko.github.io/blog/posts/2010-09-22-slides-from-practical-agility-jbehave-and-fit-goodbadugly/</guid>
+  <pubDate>Wed, 22 Sep 2010 00:00:00 GMT</pubDate>
+</item>
+<item>
+  <title>JBehave 3.0 released!!</title>
+  <dc:creator>Brian Repko</dc:creator>
+  <link>https://brianrepko.github.io/blog/posts/2010-09-02-jbehave-3-0-released/</link>
+  <description><![CDATA[ 
+
+
+
+
+
+<p><a href="http://brianrepko.wordpress.com/wp-content/uploads/2010/09/jbehave-logo.png"><img src="https://brianrepko.github.io/blog/posts/2010-09-02-jbehave-3-0-released/images/jbehave-logo.png" title="jbehave-logo" class="img-fluid" alt="jbehave logo"></a>JBehave 3.0 was <a href="http://jbehave.org/2010/08/31/jbehave-3-0-released/">released</a> yesterday (finally!!). I’m thrilled to have donated the Multi-tennant Spring Security example (which has been updated to JBehave 3). That example is now part of the many examples that are included in JBehave. Looking to update the presentation on my website to explain some of the new features that make up JBehave 3.0. Congrats to Mauro and Paul on all their hard work!</p>
+
+
+
+ ]]></description>
+  <category>agile</category>
+  <category>java</category>
+  <guid>https://brianrepko.github.io/blog/posts/2010-09-02-jbehave-3-0-released/</guid>
+  <pubDate>Thu, 02 Sep 2010 00:00:00 GMT</pubDate>
+</item>
+<item>
+  <title>Extending Jasypt - AES and Blowfish support</title>
+  <dc:creator>Brian Repko</dc:creator>
+  <link>https://brianrepko.github.io/blog/posts/2010-07-21-extending-jasypt-aes-and-blowfish-support/</link>
+  <description><![CDATA[ 
+
+
+
+
+
+<p>I recently had to code Java / Perl interoperable encryption - in Perl it was using the Crypt::CBC and Crypt::Blowfish modules. The perl code was meant to be as simple as possible: <code>$cipher = Crypt::CBC-&gt;new( -cipher =&gt; 'Blowfish', -key =&gt; 'password' ); $ciphertext = $cipher-&gt;encrypt_hex("This data is super secret hush hush");</code></p>
+<p>The key is really a passphrase that is then generated into a key and IV for use with the underlying CBC/cipher. These modules are by default compatible with OpenSSL. I thought that since this is password-based encryption, that I could use Jasypt, one of my favorite libraries. Unfortunately, Jasypt only supports the PBE* cipher algorithms and none of them are the OpenSSL standards. So then I thought that I could at least get Jasypt to support Blowfish. No luck…the algorithm is just hard-coded to PBE-based encryption. Even the IV work would be impossible.</p>
+<p>So for the project, I created my own mini-framework that includes converters (hex/base64 string to byte[] or String to byte[] based on a character-set) and ciphers defined via generics with the ability to create a string-to-string “encryptor” by combining a String-to-byte[] (utf-8) converter with a byte[]-to-byte[] cipher with a byte[]-to-String (hex) converter. This is sort of what Jasypt does but its not very pluggable in that fashion.</p>
+<p>Then to write the byte[]-to-byte[] cipher, I started with a generalized algorithm that works for both the PBE* algorithms but also for AES and Blowfish with the key and IV generation handled in the process. Plug in BouncyCastle’s OpenSSLPBEParametersGenerator for key/IV generation and write my own decorator for dealing with sharing the salt as “Salted__XXXXXXXX” in front of the ciphertext and voila! perl-java encryption interoperability based on passwords and random salts!!</p>
+<p>That project has ended and I’m now in-between gigs so I worked that code into Jasypt - just added a feature request (with a patch) to Jasypt. Not specifically the perl stuff but the generalized algorithm. That allows users to finally extend Jasypt - still for password-based encryption but not limited to the PBE* algorithms. Support is finally in there for AES and Blowfish with key and IV generation based on PBKDF2 or whatever else you want to add. Changes to Jasypt to support the configuration of the whole “pipeline” is not in there - that would require some serious changes to Jasypt.</p>
+<p>As for the algorithms - they look like this:</p>
+<p>For encryption, <code>EncryptionData data = buildEncryptionData(); data.setMethodInput(message); dataProcessor.preProcess(Cipher.ENCRYPT_MODE, data); SecretKey key = keyGenerator.generateSecretKey(data); AlgorithmParameterSpec parameterSpec = paramGenerator.generateParameterSpec(data); synchronized (encryptCipher) { encryptCipher.init(Cipher.ENCRYPT_MODE, key, parameterSpec); data.setCipherOutput(encryptCipher.doFinal(data.getCipherInput())); } dataProcessor.postProcess(Cipher.ENCRYPT_MODE, data); return data.getMethodOutput();</code></p>
+<p>For decryption, <code>EncryptionData data = buildEncryptionData(); data.setMethodInput(encryptedMessage); dataProcessor.preProcess(Cipher.DECRYPT_MODE, data); SecretKey key = keyGenerator.generateSecretKey(data); AlgorithmParameterSpec parameterSpec = paramGenerator.generateParameterSpec(data); synchronized (decryptCipher) { this.decryptCipher.init(Cipher.DECRYPT_MODE, key, parameterSpec); data.setCipherOutput(decryptCipher.doFinal(data.getCipherInput())); } dataProcessor.postProcess(Cipher.DECRYPT_MODE, data); return data.getMethodOutput();</code></p>
+<p>And all the real work is done in the SecretKeyGenerator (which actually generates more than just the key - it just returns the key), the AlgorithmParamsGenerator and the EncryptionDataProcessor - all of which are just interfaces. All the transient data for the method is kept in the EncryptionData class or subclass. So that is the patch just submitted.</p>
+<p>And perl interoperability could be added with an OpenSSLSecretKeyGenerator and an OpenSSLEncryptionDataProcessor to handle the “Salted__XXXXXXX” format - the rest is all in there (once the patch is approved, committed and released). The OpenSSLSecretKeyGenerator would work like the PBKDF2SecretKeyGenerator in that it would produce the key and IV based on a password and fixed or random salt. Its just that OpenSSL does a funky key and IV generation mechanism that I’m not sure is in the default JCE providers. And the OpenSSLEncryptionDataProcessor is just an extension of the existing one with the hardcoded “Salted__” thrown in for good measure.</p>
+<p>Here’s hoping that gets added by the next project. Jasypt team - I’m more than willing to help!</p>
+
+
+
+ ]]></description>
+  <category>java</category>
+  <guid>https://brianrepko.github.io/blog/posts/2010-07-21-extending-jasypt-aes-and-blowfish-support/</guid>
+  <pubDate>Wed, 21 Jul 2010 00:00:00 GMT</pubDate>
+</item>
+<item>
+  <title>JBehave presentation for Twin Cities Java Users Group</title>
+  <dc:creator>Brian Repko</dc:creator>
+  <link>https://brianrepko.github.io/blog/posts/2010-04-12-jbehave-presentation-for-twin-cities-java-users-group/</link>
+  <description><![CDATA[ 
+
+
+
+
+
+<p>Finally finished the JBehave presentation for tonight’s Twin Cities Java Users Group. You can find the PPT and source code at the LearnThinkCode <a href="http://www.learnthinkcode.com">website</a>. Any and all feedback is welcome.</p>
+<p>In the end, I really think that this is the year that Agile testing via executable requirements will take off and I do think that JBehave can be a part of that. There are some key things to work out however (library bundling issues, integration with JUnit for Spring) that need to be looked at before its really ready for prime time. And getting the Pico Ajax Email / Selenium example working was painful. Please don’t release versioned software that depends on snapshot releases of other code!</p>
+<p>So, it would be useable on projects if you are willing to spend some time on getting your base class / infrastructure stuff setup. Personally, I like it more than FIT/Fitnesse.</p>
+
+
+
+ ]]></description>
+  <guid>https://brianrepko.github.io/blog/posts/2010-04-12-jbehave-presentation-for-twin-cities-java-users-group/</guid>
+  <pubDate>Mon, 12 Apr 2010 00:00:00 GMT</pubDate>
+</item>
+<item>
+  <title>extreme distributed scrum - daily standup</title>
+  <dc:creator>Brian Repko</dc:creator>
+  <link>https://brianrepko.github.io/blog/posts/2010-02-26-extreme-distributed-scrum-daily-standup/</link>
+  <description><![CDATA[ 
+
+
+
+
+
+<p>I’ve worked on Scrum teams where 1/2 the team is in one location and 1/2 in another (both offshore and onshore) and every now and then we would use an IM conference in order to have a “standup” (except that we are sitting and on IM). We tried video and phone conferencing as well but given the lag in the network as well as lack of equipment and network availability, IM seemed to just work better. IM allowed for give-and-take (with some lag <em>but a lag we were familiar with</em>) and was always available. In addition, IM allowed the conversation to be sent via email for later reading and sharing (to the 1/2 of the team that wasn’t in yet). Since then, I’ve wondered about what technology tools one would need if the team was completely separated (think rock stars all working from home).</p>
+<p>If all the team members were located in their own location - how would I set this up? The kicker here is the mess of timezones that might be in the mix. Obviously, I’d have a wiki and perhaps an agile PM (kanban/scrum) web app running somewhere that we could all access in our timezone. When folks are distributed and have an overlapping time, then can use VNC (or other free solutions like that) to “pair-up” as needed. Likewise, VoIP/IM conferences or just VoIP/IM for issues and/or questions.</p>
+<p>But how to do “standups” when there isn’t a time that everyone can standup? How to let someone know you are stuck on something and how to hand off a potential solution to someone that will get it hours later. My insight was that a team could host an <strong>internal blog/Twitter</strong> to share what they did yesterday, what they are doing today and what issues are blocking them. Status updates (“working on X” or “can’t figure out Y”) can then really be done at anytime and those folks that are online can help step in. Some IM systems have a status but I’m not sure that that is very visible. <strong>Add an RSS feed on top</strong> of the teams blogs (like twitter) a<a href="http://brianrepko.wordpress.com/wp-content/uploads/2010/02/twitterrssfeed1-main_full.jpg"><img src="https://brianrepko.github.io/blog/posts/2010-02-26-extreme-distributed-scrum-daily-standup/images/twitterrssfeed1-main_full.jpg" title="TwitterRSSFeed1-main_Full" class="img-fluid"></a>nd you’ll start to see team collaboration. Start your day by reading all the updates from folks since you were last on. The whole project life could be read if you really wanted too - like emailing the IM discussion. Still doesn’t help with the I have an issue with X and what a potential solution might be (hours later). I could see the wiki or issue tracking system kind of work in that space. In this scenario, the world of “standup” starts to look like “status” - but that might be ok just given the realities of multiple people in multiple timezones. I thought that it would be an interesting way to run a project without standups.</p>
+<p>Iteration and release planning would be difficult in this situation - that might just have to be done together.</p>
+<p>I’ve not had this situation - have you? What worked or didn’t work?</p>
+
+
+
+ ]]></description>
+  <category>agile</category>
+  <guid>https://brianrepko.github.io/blog/posts/2010-02-26-extreme-distributed-scrum-daily-standup/</guid>
+  <pubDate>Fri, 26 Feb 2010 00:00:00 GMT</pubDate>
+</item>
+<item>
+  <title>Making Ant 1.8 work like Maven - not so much</title>
+  <dc:creator>Brian Repko</dc:creator>
+  <link>https://brianrepko.github.io/blog/posts/2010-02-19-making-ant-1-8-work-like-maven-not-so-much/</link>
+  <description><![CDATA[ 
+
+
+
+
+
+<p>I’ve done Ant build files in the past that ended up working like Maven2. Mostly since it was a non-Maven shop but also because it was a way to get folks into Maven-think but by using Ant.</p>
+<p>Now, <a href="http://ant.apache.org/">Ant 1.8</a> has been released and with it some new features that could potentially make it possible to have very modular Ant builds that would be even better than Maven2. One of the main concepts within Maven2 is the various <a href="http://maven.apache.org/guides/introduction/introduction-to-the-lifecycle.html">lifecycles</a> (clean, build/default and site) and that build tasks from plugins are bound to various parts of the lifecycle. Ant 1.8 introduced the notion of <a href="http://ant.apache.org/manual/targets.html">extension-points and extensionOf</a> as well as <a href="http://ant.apache.org/manual/CoreTasks/import.html">imports</a> and local properties - these could all be used to both create plugins (macrodefs) and our own lifecycles (sets of extension-points) and then bind them all up together in a build.xml and just import what you need - potentially from an http URL.</p>
+<p>Well, that was the thought…</p>
+<p>Turns out that imports are processed after the build.xml is parsed. That’s all well and good, but when an extensionOf attribute is parsed, Ant looks for the target(s) named in the extensionOf value in order to add the current target as a dependency. That requires that the target has to exist in the project and if that target is part of an import (as the documentation seems to suggest), then the target doesn’t exist (yet) at the time of parsing and you get a nice error message to that effect.</p>
+<p>I think that this is a design flaw in how extension-point / extensionOf is supposed to work and contradicts the example cited in the documentation - which doesn’t work.</p>
+<p>Its too bad because with these features, I could define my own lifecycles or even change/modify the existing ones from Maven2 to do things related to database SQL modules (create the database from all the SQL scripts and some data files) or be able to mix the SQL and java files together in the same module and add phases to the lifecycle related to database setup. This has always been something that I have to hack up the pom for anyway - which is part of why I like going back to Ant - I can change it easier when I need to.</p>
+<p>Work-arounds? Change the ProjectHelper/TargetHelper to deal with extensionOf attributes after the import stack is popped (and all the targets are resolved) or import the extensionOfs (the bindings or which macros get called for each step) after the extension-points are imported. I’m not a fan of the latter as I really think that the bindings are the build - execute these steps for these lifecycle stages - but if my build is just a bunch of imports, that’s not the worst of it. Or screw the use of extension-points/extensionOf and just use imports with empty targets (which is kind of what extension-points are - except that I could then create a target that gets bound to multiple extension-points with extensionOf=“target1,target2”).</p>
+<p>It does sadden me that the example cited doesn’t even work however. If I get this working, I’ll post the example.</p>
+
+
+
+ ]]></description>
+  <guid>https://brianrepko.github.io/blog/posts/2010-02-19-making-ant-1-8-work-like-maven-not-so-much/</guid>
+  <pubDate>Fri, 19 Feb 2010 00:00:00 GMT</pubDate>
+</item>
+<item>
+  <title>Connecting Agile Teams - one pink post-it at a time</title>
+  <dc:creator>Brian Repko</dc:creator>
+  <link>https://brianrepko.github.io/blog/posts/2010-01-27-connecting-agile-teams-one-pink-post-it-at-a-time/</link>
+  <description><![CDATA[ 
+
+
+
+
+
+<p><a href="http://brianrepko.wordpress.com/wp-content/uploads/2010/01/pink-post-it.jpg"><img src="https://brianrepko.github.io/blog/posts/2010-01-27-connecting-agile-teams-one-pink-post-it-at-a-time/images/pink-post-it.jpg" title="pink-post-it" class="img-fluid"></a>I’ve used color coded cards on Scrum boards - green for user story, blue for system story, yellow task cards for design or review work, blue task card for “technical architecture work”, etc. - lots of variations.&nbsp; Sometimes I suggest it, sometimes I don’t.&nbsp; Just part of the box of tools.&nbsp; The one thing that I’ve noticed with this however was the use of pink cards and post-its and how they can be used to connect agile teams and help build an agile enterprise.</p>
+<p>My original use of pink cards was for a Scrum board for developers to fix a critical or blocker bug.&nbsp; This was for a team that was just developers - the testers were a completely different team.&nbsp; And the pink card was basically a request for the development team to help un-block the testing team (and dev team would estimate it and decide if they would need to take something else off the board).</p>
+<p>I’ve also used pink post-its on Scrum boards to report a blocking issue on a task - just as a way to remind people working on the issue that it is important and to bring it up in standup until the issue is resolved.</p>
+<p>On another team that I worked on we sort-of had a Kanban board for release or operations tasks related to the program (multiple projects - one operations team) and if the implementation team had a request to make of them (e.g.&nbsp;database to setup), then we would create a pink card for their board.&nbsp; Basically a pink card is a Please Do This ASAP request.&nbsp; Maybe pink should stand for Please Implement Now, Kind (Sir/Madam).</p>
+<p>What I realized is that one way to connect these teams, with their own boards and tasks and stories is that <strong>the issue (post-it) is tied to request(s) to resolve the issue (cards) and you could track and connect those issues/tasks that way</strong>. So basically, for that first scenario (separate dev and test teams), if the test team had had a board, their pink post-it (the blocking issue) was tied to the pink card for the development team (the issue resolvers).&nbsp; And a board with a lot of pink is a conversation waiting to happen.</p>
+<p>Simple and easy way to handle and track issues that need to get done now that I think helps build an agile enterprise.</p>
+
+
+
+ ]]></description>
+  <category>agile</category>
+  <guid>https://brianrepko.github.io/blog/posts/2010-01-27-connecting-agile-teams-one-pink-post-it-at-a-time/</guid>
+  <pubDate>Wed, 27 Jan 2010 00:00:00 GMT</pubDate>
+</item>
+<item>
+  <title>Scrum and Kanban together</title>
+  <dc:creator>Brian Repko</dc:creator>
+  <link>https://brianrepko.github.io/blog/posts/2010-01-27-scrum-and-kanban-together/</link>
+  <description><![CDATA[ 
+
+
+
+
+
+<p>One of my favorite links is Henrik Kniberg’s “<a href="http://www.crisp.se/henrik.kniberg/Kanban-vs-Scrum.pdf">mini-book</a>” on Kanban and Scrum and how they work (and how they are similar and different).&nbsp; Given that description of Kanban and <a href="http://brianrepko.wordpress.com/2010/01/25/when-is-a-story-prepared/">my thoughts on story prep and story release work</a>, I would really love to try a Kanban board for story prep and release work with a Scrum board for implemenation work.&nbsp; Definately for prep and implementation - release probably depends how that process looks - perhaps one release board for a program (multiple projects but one solution).</p>
+<p><a href="http://brianrepko.wordpress.com/wp-content/uploads/2010/01/blog-kanban-scrum.jpg"><img src="https://brianrepko.github.io/blog/posts/2010-01-27-scrum-and-kanban-together/images/blog-kanban-scrum.jpg" title="blog-kanban-scrum" class="img-fluid"></a></p>
+<p>Backlog grooming would actively work the story prep board.&nbsp; The team could see what stories are getting ready for planning as well as a release team (or management team) seeing what is getting ready for release to production.&nbsp; I think that it would actually engage those team members that are at the daily standup but are not developers or testers - they can point to what they are working on - its just on the story prep kanban board.&nbsp; I think that it could make for a good information radiator for a wider “team”.&nbsp;</p>
+<p>The other way to look at this, from a metrics standpoint, is to see that the whole Scrum board is just one column of a larger Kanban board and that you could measure and reduce the throughput time of a story from backlog to released to production on that larger Kanban board.</p>
+<p>Has anyone ever done anything like this?&nbsp; Did it work? Things to improve about it?</p>
+<p>Putting this post together, I just noticed Henrik’s <a href="http://blog.crisp.se/henrikkniberg/2009/12/21/1261410240000.html">Kanban and Scrum - Making the Most of Both</a> - something new to read!</p>
+
+
+
+ ]]></description>
+  <category>agile</category>
+  <guid>https://brianrepko.github.io/blog/posts/2010-01-27-scrum-and-kanban-together/</guid>
+  <pubDate>Wed, 27 Jan 2010 00:00:00 GMT</pubDate>
+</item>
+<item>
+  <title>When is a story prepared?</title>
+  <dc:creator>Brian Repko</dc:creator>
+  <link>https://brianrepko.github.io/blog/posts/2010-01-25-when-is-a-story-prepared/</link>
+  <description><![CDATA[ 
+
+
+
+
+
+<p><a href="http://brianrepko.wordpress.com/wp-content/uploads/2010/01/blog-circles.jpg"><img src="https://brianrepko.github.io/blog/posts/2010-01-25-when-is-a-story-prepared/images/blog-circles.jpg" title="blog-circles" class="img-fluid"></a>This is another drawing that I use alot while coaching agile projects and actually is part of multiple discussions around agile methods.&nbsp; Most agile methods talk about stories being created by the customer and put on a backlog.&nbsp; For some iteration, at iteration planning, the story gets explained to developers and testers.&nbsp; They work on the story until it is complete.&nbsp; And we have lots of conversations, as agile coaches and teams, about “when is a story complete”.</p>
+<p>This misses alot of the work that needs to be done in order to make teams effective. I like to have regular backlog grooming meetings with part of the team and ask the question - <em><strong>is this story prepared?</strong></em>.&nbsp; <em><strong>What is needed in order to bring this story to iteration planning?</strong></em> That needed work might involve QA (quality assurance) for acceptance tests or functional tests.&nbsp; That might involve UX (user experience) for wireframes or drawings.&nbsp; That might involve some TA (technical architecture) work or IA (information architecture, or domain modeling) work depending on the story.&nbsp; It might require a BA to work out the business value of this story or how to break it up into what needs to done now versus later (breaking up stories into smaller, potentially optional pieces).&nbsp; Its only when a story is prepared that it should be brought to iteration planning.</p>
+<p>I also use this picture to help explain why some work is “on the board” for the iteration (meaning we are tracking velocity and burndown charts - its the developer/tester circle) vs work that needs to get done but we aren’t measuring velocity for it.&nbsp; The first is working towards completing the story.&nbsp; The latter is working towards getting the story prepared.</p>
+<p>It also helps explain the roles of the non-customer, non-developer and non-tester folks…though I’m pretty careful to explain that that 2nd circle is optional work (story by story) and that that work can be done by anyone with those skills.&nbsp; Its really about what would make the communication of this story effective and doing that in as lightweight of a fashion as you need.</p>
+<p>The last part of this drawing is that the story doesn’t stop because development is done.&nbsp; Its really done when its deployed (some would say deployed to production) and supported.&nbsp; This means that the story needs to be shared with operations and support teams.&nbsp; I’ve seen this done as part of a release process and actually made it the responsibility of the whole team to figure how to to communicate the stories that are being released.&nbsp; Really each circle needs to figure out when its done with the story and how to communicate to the next circle (and then there are feedback loops!).</p>
+<p>Its really about effective communication and community.&nbsp; I didn’t get this last part until attending a session with <a href="http://www.devjam.com/presentations/">David Hussman</a> who talks about building community around a story.</p>
+
+
+
+ ]]></description>
+  <category>agile</category>
+  <guid>https://brianrepko.github.io/blog/posts/2010-01-25-when-is-a-story-prepared/</guid>
+  <pubDate>Mon, 25 Jan 2010 00:00:00 GMT</pubDate>
+</item>
+<item>
+  <title>What is software architecture?</title>
+  <dc:creator>Brian Repko</dc:creator>
+  <link>https://brianrepko.github.io/blog/posts/2010-01-25-what-is-software-architecture/</link>
+  <description><![CDATA[ 
+
+
+
+
+
+<p><a href="http://brianrepko.wordpress.com/wp-content/uploads/2010/01/teaching.gif"><img src="https://brianrepko.github.io/blog/posts/2010-01-25-what-is-software-architecture/images/teaching.gif" title="teaching" class="img-fluid"></a>Lots of folks that don’t know what I do (and some that do) will often ask what is a software architect? What is software architecture?</p>
+<p>My short answer is that <strong>software architecture answers all the “how do I <fill-in-the-blank>” (or “how does it?”) questions that come up on a software development project</fill-in-the-blank></strong>.&nbsp; I’m a fan of the concepts behind the <a href="http://en.wikipedia.org/wiki/4%2B1_Architectural_View_Model">4+1 model of software architecture</a> - that there are various categories (views) of these questions all answered as the team works through the functional requirements (scenarios).&nbsp; I can never remember what the actual 4 views are - but one of the main categories is about how development is done (the development view), or where code is actually deployed and running (the physical view) to how layers of the software work together (the logical view) and then there is some other one…which is where I lump all the “how does the system do X” answers (I think its the process view - and yes, I’m too lazy to google it right now).</p>
+<p>When you look at all the “how do I” questions that come up - there are lots - but they are all architecture. This can literally be something as simple as “how do I add logging to this system?” with simple answers - we are using SLF4J on Log4J.&nbsp; Which can then lead into deeper questions (how do I change logging levels at runtime?&nbsp; how is logging started and shutdown in this system?)…up to the “standard” stuff that architects typically focus on - “how does the solution provide for scalable performance?”, etc.</p>
+<p>But in the end, whenever I hear a “how do I” or “how does it” question - that is architecture - and a potential teaching moment.&nbsp; In my opinion, architects should be doing what the other team members are doing (coding/testing) in order to be effective. And really good architects teach.</p>
+
+
+
+ ]]></description>
+  <category>architecture</category>
+  <guid>https://brianrepko.github.io/blog/posts/2010-01-25-what-is-software-architecture/</guid>
+  <pubDate>Mon, 25 Jan 2010 00:00:00 GMT</pubDate>
+</item>
+<item>
+  <title>QA versus QC</title>
+  <dc:creator>Brian Repko</dc:creator>
+  <link>https://brianrepko.github.io/blog/posts/2010-01-25-qa-versus-qc/</link>
+  <description><![CDATA[ 
+
+
+
+
+
+<p><a href="http://brianrepko.wordpress.com/wp-content/uploads/2010/01/checkbox.jpg"><img src="https://brianrepko.github.io/blog/posts/2010-01-25-qa-versus-qc/images/checkbox.jpg" title="checkbox" class="img-fluid"></a></p>
+<p>For Agile projects, I often coach about the need for a QA (quality assurance) role in addition to just testers (or QC / quality control). For me, QA answers the question <strong>“are we doing the right job?”</strong> and QC answers the question <strong>“are we doing the job right?”</strong>.</p>
+<p>I see QA working with the Customer/Product Owner on coverage for acceptance and functional testing. A great QA person will be able to answer the architecture (“how do I - ?”) questions for the QC team as well as, like a great Business Analyst, be able to hold the domain model in their head. Could even be the same head (BA/QA)…</p>
+
+
+
+ ]]></description>
+  <category>agile</category>
+  <guid>https://brianrepko.github.io/blog/posts/2010-01-25-qa-versus-qc/</guid>
+  <pubDate>Mon, 25 Jan 2010 00:00:00 GMT</pubDate>
+</item>
+<item>
+  <title>Discovering software architecture</title>
+  <dc:creator>Brian Repko</dc:creator>
+  <link>https://brianrepko.github.io/blog/posts/2010-01-25-discovering-software-architecture/</link>
+  <description><![CDATA[ 
+
+
+
+
+
+<p><a href="http://brianrepko.wordpress.com/wp-content/uploads/2010/01/blog-arch-func.jpg"><img src="https://brianrepko.github.io/blog/posts/2010-01-25-discovering-software-architecture/images/blog-arch-func.jpg" title="blog-arch-func" class="img-fluid"></a>I draw this picture alot on projects that I’ve been on so I figured that I should put it up here on the blog.&nbsp; The idea behind it is that on agile projects, <strong>one discovers the architectural requirements in conjunction with discovering the functional requirements</strong>.&nbsp; You learn a bit about the functionality, you make some choices on architecture, you learn a bit more about functionality, you make some more choices about architecture, etc. until the full solution is complete.</p>
+<p>There is a skill to chosing which architectural requirements need to be addressed when.&nbsp; On one project that I was on, I put off deciding on how to handle exceptions through the various layers of theh architecture.&nbsp; We eventually tackled the issue (with ingenious input from the team) but by then we had lots of code to change and refactor.&nbsp; That lesson painfully showed the cost of “technical debt” - we borrowed that time from the future of the project and had to pay it back with interest.&nbsp; Lesson learned - I would not put that concern/requirement off that late again.</p>
+<p>I think that html style guides (what css classes are we using and for what purpose) on web-based projects are another common concern that gets put off and the price is paid later with interest.&nbsp; I’ve done whole iterations of nothing but styling.</p>
+<p>The trick is to make those architectural choices at the <strong>last responsible moment</strong> - but you never really know when that is.&nbsp; Its like knowing how to play an instrument - practice, practice, practice.</p>
+<p>Are there other that you like to see addressed earlier than when you’ve actually done them?</p>
+
+
+
+ ]]></description>
+  <category>agile</category>
+  <category>architecture</category>
+  <guid>https://brianrepko.github.io/blog/posts/2010-01-25-discovering-software-architecture/</guid>
+  <pubDate>Mon, 25 Jan 2010 00:00:00 GMT</pubDate>
+</item>
+</channel>
+</rss>
