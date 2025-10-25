@@ -1,5 +1,4 @@
 ---
-title: "Learning, Thinking, and Coding"
 listing:
   contents: posts
   sort: "date desc"
