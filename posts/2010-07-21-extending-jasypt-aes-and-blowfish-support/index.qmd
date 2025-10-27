@@ -1,0 +1,80 @@
+---
+title: "Extending Jasypt - AES and Blowfish support"
+description: "Encryption between Java and Perl"
+image: encryption-9.png
+date: 2010-07-21
+categories: 
+  - "java"
+---
+
+I recently had to code Java / Perl interoperable encryption - in Perl it was using the `Crypt::CBC` and `Crypt::Blowfish` modules.
+The perl code was meant to be as simple as possible: 
+```perl
+$cipher = Crypt::CBC->new( -cipher => 'Blowfish', -key => 'password' ); 
+$ciphertext = $cipher->encrypt_hex("This data is super secret hush hush");
+```
+
+The key is really a passphrase that is then generated into a key and IV for use with the underlying CBC/cipher.
+These modules are by default compatible with OpenSSL.
+I thought that since this is password-based encryption, that I could use Jasypt, one of my favorite libraries.
+Unfortunately, Jasypt only supports the PBE\* cipher algorithms and none of them are the OpenSSL standards.
+So then I thought that I could at least get Jasypt to support Blowfish.
+No luck...the algorithm is just hard-coded to PBE-based encryption. 
+Even the IV work would be impossible.
+
+So for the project, I created my own mini-framework that includes converters (hex/base64 string to byte\[\] or String to byte\[\] based on a character-set) and ciphers defined via generics with the ability to create a string-to-string "encryptor" by combining a String-to-byte\[\] (utf-8) converter with a byte\[\]-to-byte\[\] cipher with a byte\[\]-to-String (hex) converter.
+This is sort of what Jasypt does but its not very pluggable in that fashion.
+
+Then to write the byte\[\]-to-byte\[\] cipher, I started with a generalized algorithm that works for both the PBE\* algorithms but also for AES and Blowfish with the key and IV generation handled in the process.
+Plug in BouncyCastle's `OpenSSLPBEParametersGenerator` for key/IV generation and write my own decorator for dealing with sharing the salt as "Salted\_\_XXXXXXXX" in front of the ciphertext and voila!
+Perl-Java encryption interoperability based on passwords and random salts!!
+
+That project has ended and I'm now in-between gigs so I worked that code into Jasypt - just added a feature request (with a patch) to Jasypt.
+Not specifically the perl stuff but the generalized algorithm.
+That allows users to finally extend Jasypt - still for password-based encryption but not limited to the PBE\* algorithms.
+Support is finally in there for AES and Blowfish with key and IV generation based on PBKDF2 or whatever else you want to add.
+Changes to Jasypt to support the configuration of the whole "pipeline" is not in there - that would require some serious changes to Jasypt.
+
+As for the algorithms - they look like this:
+
+For encryption,
+```java
+EncryptionData data = buildEncryptionData();
+data.setMethodInput(message); 
+dataProcessor.preProcess(Cipher.ENCRYPT_MODE, data); 
+SecretKey key = keyGenerator.generateSecretKey(data); 
+AlgorithmParameterSpec parameterSpec = paramGenerator.generateParameterSpec(data);
+synchronized (encryptCipher) { 
+  encryptCipher.init(Cipher.ENCRYPT_MODE, key, parameterSpec); 
+  data.setCipherOutput(encryptCipher.doFinal(data.getCipherInput())); 
+}
+dataProcessor.postProcess(Cipher.ENCRYPT_MODE, data);
+return data.getMethodOutput();
+```
+
+For decryption,
+```java
+EncryptionData data = buildEncryptionData(); 
+data.setMethodInput(encryptedMessage); 
+dataProcessor.preProcess(Cipher.DECRYPT_MODE, data); 
+SecretKey key = keyGenerator.generateSecretKey(data); 
+AlgorithmParameterSpec parameterSpec = paramGenerator.generateParameterSpec(data); 
+synchronized (decryptCipher) { 
+  this.decryptCipher.init(Cipher.DECRYPT_MODE, key, parameterSpec); 
+  data.setCipherOutput(decryptCipher.doFinal(data.getCipherInput())); 
+} 
+dataProcessor.postProcess(Cipher.DECRYPT_MODE, data); 
+return data.getMethodOutput();
+```
+
+And all the real work is done in the `SecretKeyGenerator` (which actually generates more than just the key - it just returns the key), the `AlgorithmParamsGenerator` and the `EncryptionDataProcessor` - all of which are just interfaces.
+All the transient data for the method is kept in the `EncryptionData` class or subclass. 
+So that is the patch just submitted.
+
+And perl interoperability could be added with an `OpenSSLSecretKeyGenerator` and an `OpenSSLEncryptionDataProcessor` to handle the "Salted\_\_XXXXXXX" format - the rest is all in there (once the patch is approved, committed and released).
+The `OpenSSLSecretKeyGenerator` would work like the `PBKDF2SecretKeyGenerator` in that it would produce the key and IV based on a password and fixed or random salt.
+Its just that OpenSSL does a funky key and IV generation mechanism that I'm not sure is in the default JCE providers.
+And the `OpenSSLEncryptionDataProcessor` is just an extension of the existing one with the hardcoded "Salted\_\_" thrown in for good measure.
+
+Here's hoping that gets added by the next project.
+Jasypt team - I'm more than willing to help!

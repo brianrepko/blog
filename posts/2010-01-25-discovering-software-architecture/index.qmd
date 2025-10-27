@@ -1,0 +1,29 @@
+---
+title: "Discovering software architecture"
+description: "Notes on emergent functionality and architecture when developing a software system"
+image: "blog-arch-func.jpg"
+date: 2010-01-25
+categories: 
+  - "agile"
+  - "architecture"
+---
+
+![](blog-arch-func.jpg){fig-align="center" height="300"}
+
+I draw this picture a lot on projects that I've been on so I figured that I should put it up here on the blog.
+The idea behind it is that on agile projects, **one discovers the architectural requirements in conjunction with discovering the functional requirements**.
+You learn a bit about the functionality, you make some choices on architecture, you learn a bit more about functionality, you make some more choices about architecture, etc. until the full solution is complete.
+
+There is a skill to choosing which architectural requirements need to be addressed when.
+On one project that I was on, I put off deciding on how to handle exceptions through the various layers of theh architecture.
+We eventually tackled the issue (with ingenious input from the team) but by then we had lots of code to change and refactor.
+That lesson painfully showed the cost of "technical debt" - we borrowed that time from the future of the project and had to pay it back with interest.
+Lesson learned - I would not put that concern/requirement off that late again.
+
+I think that html style guides (what css classes are we using and for what purpose) on web-based projects are another common concern that gets put off and the price is paid later with interest.
+I've done whole iterations of nothing but styling.
+
+The trick is to make those architectural choices at the **last responsible moment** - but you never really know when that is.
+Its like knowing how to play an instrument - practice, practice, practice.
+
+Are there other that you like to see addressed earlier than when you've actually done them?
