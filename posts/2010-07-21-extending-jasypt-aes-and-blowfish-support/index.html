@@ -8,6 +8,7 @@
 
 <meta name="author" content="Brian Repko">
 <meta name="dcterms.date" content="2010-07-21">
+<meta name="description" content="Encryption between Java and Perl">
 
 <title>Extending Jasypt - AES and Blowfish support – Learning, Thinking, and Coding</title>
 <style>
@@ -21,6 +22,41 @@ ul.task-list li input[type="checkbox"] {
   width: 0.8em;
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 </style>
 
@@ -132,7 +168,12 @@ ul.task-list li input[type="checkbox"] {
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-body">
       <h1 class="title">Extending Jasypt - AES and Blowfish support</h1>
-                                <div class="quarto-categories">
+                  <div>
+        <div class="description">
+          Encryption between Java and Perl
+        </div>
+      </div>
+                          <div class="quarto-categories">
                 <div class="quarto-category">java</div>
               </div>
                   </div>
@@ -170,16 +211,40 @@ ul.task-list li input[type="checkbox"] {
 
 
 
-<p>I recently had to code Java / Perl interoperable encryption - in Perl it was using the Crypt::CBC and Crypt::Blowfish modules. The perl code was meant to be as simple as possible: <code>$cipher = Crypt::CBC-&gt;new( -cipher =&gt; 'Blowfish', -key =&gt; 'password' ); $ciphertext = $cipher-&gt;encrypt_hex("This data is super secret hush hush");</code></p>
+<p>I recently had to code Java / Perl interoperable encryption - in Perl it was using the <code>Crypt::CBC</code> and <code>Crypt::Blowfish</code> modules. The perl code was meant to be as simple as possible:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode perl code-with-copy"><code class="sourceCode perl"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="dt">$cipher</span> = <span class="fu">Crypt::CBC</span>-&gt;new( -cipher =&gt; <span class="ot">'</span><span class="ss">Blowfish</span><span class="ot">'</span>, -key =&gt; <span class="ot">'</span><span class="ss">password</span><span class="ot">'</span> ); </span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="dt">$ciphertext</span> = <span class="dt">$cipher</span>-&gt;<span class="dt">encrypt_hex</span>(<span class="ot">"</span><span class="st">This data is super secret hush hush</span><span class="ot">"</span>);</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>The key is really a passphrase that is then generated into a key and IV for use with the underlying CBC/cipher. These modules are by default compatible with OpenSSL. I thought that since this is password-based encryption, that I could use Jasypt, one of my favorite libraries. Unfortunately, Jasypt only supports the PBE* cipher algorithms and none of them are the OpenSSL standards. So then I thought that I could at least get Jasypt to support Blowfish. No luck…the algorithm is just hard-coded to PBE-based encryption. Even the IV work would be impossible.</p>
 <p>So for the project, I created my own mini-framework that includes converters (hex/base64 string to byte[] or String to byte[] based on a character-set) and ciphers defined via generics with the ability to create a string-to-string “encryptor” by combining a String-to-byte[] (utf-8) converter with a byte[]-to-byte[] cipher with a byte[]-to-String (hex) converter. This is sort of what Jasypt does but its not very pluggable in that fashion.</p>
-<p>Then to write the byte[]-to-byte[] cipher, I started with a generalized algorithm that works for both the PBE* algorithms but also for AES and Blowfish with the key and IV generation handled in the process. Plug in BouncyCastle’s OpenSSLPBEParametersGenerator for key/IV generation and write my own decorator for dealing with sharing the salt as “Salted__XXXXXXXX” in front of the ciphertext and voila! perl-java encryption interoperability based on passwords and random salts!!</p>
+<p>Then to write the byte[]-to-byte[] cipher, I started with a generalized algorithm that works for both the PBE* algorithms but also for AES and Blowfish with the key and IV generation handled in the process. Plug in BouncyCastle’s <code>OpenSSLPBEParametersGenerator</code> for key/IV generation and write my own decorator for dealing with sharing the salt as “Salted__XXXXXXXX” in front of the ciphertext and voila! Perl-Java encryption interoperability based on passwords and random salts!!</p>
 <p>That project has ended and I’m now in-between gigs so I worked that code into Jasypt - just added a feature request (with a patch) to Jasypt. Not specifically the perl stuff but the generalized algorithm. That allows users to finally extend Jasypt - still for password-based encryption but not limited to the PBE* algorithms. Support is finally in there for AES and Blowfish with key and IV generation based on PBKDF2 or whatever else you want to add. Changes to Jasypt to support the configuration of the whole “pipeline” is not in there - that would require some serious changes to Jasypt.</p>
 <p>As for the algorithms - they look like this:</p>
-<p>For encryption, <code>EncryptionData data = buildEncryptionData(); data.setMethodInput(message); dataProcessor.preProcess(Cipher.ENCRYPT_MODE, data); SecretKey key = keyGenerator.generateSecretKey(data); AlgorithmParameterSpec parameterSpec = paramGenerator.generateParameterSpec(data); synchronized (encryptCipher) { encryptCipher.init(Cipher.ENCRYPT_MODE, key, parameterSpec); data.setCipherOutput(encryptCipher.doFinal(data.getCipherInput())); } dataProcessor.postProcess(Cipher.ENCRYPT_MODE, data); return data.getMethodOutput();</code></p>
-<p>For decryption, <code>EncryptionData data = buildEncryptionData(); data.setMethodInput(encryptedMessage); dataProcessor.preProcess(Cipher.DECRYPT_MODE, data); SecretKey key = keyGenerator.generateSecretKey(data); AlgorithmParameterSpec parameterSpec = paramGenerator.generateParameterSpec(data); synchronized (decryptCipher) { this.decryptCipher.init(Cipher.DECRYPT_MODE, key, parameterSpec); data.setCipherOutput(decryptCipher.doFinal(data.getCipherInput())); } dataProcessor.postProcess(Cipher.DECRYPT_MODE, data); return data.getMethodOutput();</code></p>
-<p>And all the real work is done in the SecretKeyGenerator (which actually generates more than just the key - it just returns the key), the AlgorithmParamsGenerator and the EncryptionDataProcessor - all of which are just interfaces. All the transient data for the method is kept in the EncryptionData class or subclass. So that is the patch just submitted.</p>
-<p>And perl interoperability could be added with an OpenSSLSecretKeyGenerator and an OpenSSLEncryptionDataProcessor to handle the “Salted__XXXXXXX” format - the rest is all in there (once the patch is approved, committed and released). The OpenSSLSecretKeyGenerator would work like the PBKDF2SecretKeyGenerator in that it would produce the key and IV based on a password and fixed or random salt. Its just that OpenSSL does a funky key and IV generation mechanism that I’m not sure is in the default JCE providers. And the OpenSSLEncryptionDataProcessor is just an extension of the existing one with the hardcoded “Salted__” thrown in for good measure.</p>
+<p>For encryption,</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode java code-with-copy"><code class="sourceCode java"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>EncryptionData data <span class="op">=</span> <span class="fu">buildEncryptionData</span><span class="op">();</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>data<span class="op">.</span><span class="fu">setMethodInput</span><span class="op">(</span>message<span class="op">);</span> </span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>dataProcessor<span class="op">.</span><span class="fu">preProcess</span><span class="op">(</span><span class="bu">Cipher</span><span class="op">.</span><span class="fu">ENCRYPT_MODE</span><span class="op">,</span> data<span class="op">);</span> </span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="bu">SecretKey</span> key <span class="op">=</span> keyGenerator<span class="op">.</span><span class="fu">generateSecretKey</span><span class="op">(</span>data<span class="op">);</span> </span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="bu">AlgorithmParameterSpec</span> parameterSpec <span class="op">=</span> paramGenerator<span class="op">.</span><span class="fu">generateParameterSpec</span><span class="op">(</span>data<span class="op">);</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="kw">synchronized</span> <span class="op">(</span>encryptCipher<span class="op">)</span> <span class="op">{</span> </span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>  encryptCipher<span class="op">.</span><span class="fu">init</span><span class="op">(</span><span class="bu">Cipher</span><span class="op">.</span><span class="fu">ENCRYPT_MODE</span><span class="op">,</span> key<span class="op">,</span> parameterSpec<span class="op">);</span> </span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>  data<span class="op">.</span><span class="fu">setCipherOutput</span><span class="op">(</span>encryptCipher<span class="op">.</span><span class="fu">doFinal</span><span class="op">(</span>data<span class="op">.</span><span class="fu">getCipherInput</span><span class="op">()));</span> </span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>dataProcessor<span class="op">.</span><span class="fu">postProcess</span><span class="op">(</span><span class="bu">Cipher</span><span class="op">.</span><span class="fu">ENCRYPT_MODE</span><span class="op">,</span> data<span class="op">);</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="cf">return</span> data<span class="op">.</span><span class="fu">getMethodOutput</span><span class="op">();</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>For decryption,</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode java code-with-copy"><code class="sourceCode java"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>EncryptionData data <span class="op">=</span> <span class="fu">buildEncryptionData</span><span class="op">();</span> </span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>data<span class="op">.</span><span class="fu">setMethodInput</span><span class="op">(</span>encryptedMessage<span class="op">);</span> </span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>dataProcessor<span class="op">.</span><span class="fu">preProcess</span><span class="op">(</span><span class="bu">Cipher</span><span class="op">.</span><span class="fu">DECRYPT_MODE</span><span class="op">,</span> data<span class="op">);</span> </span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="bu">SecretKey</span> key <span class="op">=</span> keyGenerator<span class="op">.</span><span class="fu">generateSecretKey</span><span class="op">(</span>data<span class="op">);</span> </span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="bu">AlgorithmParameterSpec</span> parameterSpec <span class="op">=</span> paramGenerator<span class="op">.</span><span class="fu">generateParameterSpec</span><span class="op">(</span>data<span class="op">);</span> </span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="kw">synchronized</span> <span class="op">(</span>decryptCipher<span class="op">)</span> <span class="op">{</span> </span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>  <span class="kw">this</span><span class="op">.</span><span class="fu">decryptCipher</span><span class="op">.</span><span class="fu">init</span><span class="op">(</span><span class="bu">Cipher</span><span class="op">.</span><span class="fu">DECRYPT_MODE</span><span class="op">,</span> key<span class="op">,</span> parameterSpec<span class="op">);</span> </span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>  data<span class="op">.</span><span class="fu">setCipherOutput</span><span class="op">(</span>decryptCipher<span class="op">.</span><span class="fu">doFinal</span><span class="op">(</span>data<span class="op">.</span><span class="fu">getCipherInput</span><span class="op">()));</span> </span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="op">}</span> </span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>dataProcessor<span class="op">.</span><span class="fu">postProcess</span><span class="op">(</span><span class="bu">Cipher</span><span class="op">.</span><span class="fu">DECRYPT_MODE</span><span class="op">,</span> data<span class="op">);</span> </span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="cf">return</span> data<span class="op">.</span><span class="fu">getMethodOutput</span><span class="op">();</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>And all the real work is done in the <code>SecretKeyGenerator</code> (which actually generates more than just the key - it just returns the key), the <code>AlgorithmParamsGenerator</code> and the <code>EncryptionDataProcessor</code> - all of which are just interfaces. All the transient data for the method is kept in the <code>EncryptionData</code> class or subclass. So that is the patch just submitted.</p>
+<p>And perl interoperability could be added with an <code>OpenSSLSecretKeyGenerator</code> and an <code>OpenSSLEncryptionDataProcessor</code> to handle the “Salted__XXXXXXX” format - the rest is all in there (once the patch is approved, committed and released). The <code>OpenSSLSecretKeyGenerator</code> would work like the <code>PBKDF2SecretKeyGenerator</code> in that it would produce the key and IV based on a password and fixed or random salt. Its just that OpenSSL does a funky key and IV generation mechanism that I’m not sure is in the default JCE providers. And the <code>OpenSSLEncryptionDataProcessor</code> is just an extension of the existing one with the hardcoded “Salted__” thrown in for good measure.</p>
 <p>Here’s hoping that gets added by the next project. Jasypt team - I’m more than willing to help!</p>
 
 

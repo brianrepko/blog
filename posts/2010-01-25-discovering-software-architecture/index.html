@@ -8,6 +8,7 @@
 
 <meta name="author" content="Brian Repko">
 <meta name="dcterms.date" content="2010-01-25">
+<meta name="description" content="Notes on emergent functionality and architecture when developing a software system">
 
 <title>Discovering software architecture – Learning, Thinking, and Coding</title>
 <style>
@@ -132,7 +133,12 @@ ul.task-list li input[type="checkbox"] {
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-body">
       <h1 class="title">Discovering software architecture</h1>
-                                <div class="quarto-categories">
+                  <div>
+        <div class="description">
+          Notes on emergent functionality and architecture when developing a software system
+        </div>
+      </div>
+                          <div class="quarto-categories">
                 <div class="quarto-category">agile</div>
                 <div class="quarto-category">architecture</div>
               </div>
@@ -171,10 +177,15 @@ ul.task-list li input[type="checkbox"] {
 
 
 
-<p><a href="http://brianrepko.wordpress.com/wp-content/uploads/2010/01/blog-arch-func.jpg"><img src="images/blog-arch-func.jpg" title="blog-arch-func" class="img-fluid"></a>I draw this picture alot on projects that I’ve been on so I figured that I should put it up here on the blog.&nbsp; The idea behind it is that on agile projects, <strong>one discovers the architectural requirements in conjunction with discovering the functional requirements</strong>.&nbsp; You learn a bit about the functionality, you make some choices on architecture, you learn a bit more about functionality, you make some more choices about architecture, etc. until the full solution is complete.</p>
-<p>There is a skill to chosing which architectural requirements need to be addressed when.&nbsp; On one project that I was on, I put off deciding on how to handle exceptions through the various layers of theh architecture.&nbsp; We eventually tackled the issue (with ingenious input from the team) but by then we had lots of code to change and refactor.&nbsp; That lesson painfully showed the cost of “technical debt” - we borrowed that time from the future of the project and had to pay it back with interest.&nbsp; Lesson learned - I would not put that concern/requirement off that late again.</p>
-<p>I think that html style guides (what css classes are we using and for what purpose) on web-based projects are another common concern that gets put off and the price is paid later with interest.&nbsp; I’ve done whole iterations of nothing but styling.</p>
-<p>The trick is to make those architectural choices at the <strong>last responsible moment</strong> - but you never really know when that is.&nbsp; Its like knowing how to play an instrument - practice, practice, practice.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="blog-arch-func.jpg" class="quarto-figure quarto-figure-center figure-img" height="300"></p>
+</figure>
+</div>
+<p>I draw this picture a lot on projects that I’ve been on so I figured that I should put it up here on the blog. The idea behind it is that on agile projects, <strong>one discovers the architectural requirements in conjunction with discovering the functional requirements</strong>. You learn a bit about the functionality, you make some choices on architecture, you learn a bit more about functionality, you make some more choices about architecture, etc. until the full solution is complete.</p>
+<p>There is a skill to choosing which architectural requirements need to be addressed when. On one project that I was on, I put off deciding on how to handle exceptions through the various layers of theh architecture. We eventually tackled the issue (with ingenious input from the team) but by then we had lots of code to change and refactor. That lesson painfully showed the cost of “technical debt” - we borrowed that time from the future of the project and had to pay it back with interest. Lesson learned - I would not put that concern/requirement off that late again.</p>
+<p>I think that html style guides (what css classes are we using and for what purpose) on web-based projects are another common concern that gets put off and the price is paid later with interest. I’ve done whole iterations of nothing but styling.</p>
+<p>The trick is to make those architectural choices at the <strong>last responsible moment</strong> - but you never really know when that is. Its like knowing how to play an instrument - practice, practice, practice.</p>
 <p>Are there other that you like to see addressed earlier than when you’ve actually done them?</p>
 
 
