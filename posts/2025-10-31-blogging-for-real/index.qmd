@@ -1,0 +1,43 @@
+---
+title: "Blogging again...for real"
+description: "and lots more time to do it"
+image: blogging.png
+date: 2025-10-31
+categories: 
+  - "bioinformatics"
+---
+
+The [2014 post](../2014-09-28-blogging-again-with-a-change-of-focus/) that I wrote was about my move into bioinformatics as well as a move to Switzerland.
+Specifically, working in the Oncology disease area of Novartis Biomedical Research.
+
+The [2019 post](../2019-04-09-snowflake-for-biomedical-research/) that I wrote had me back in Minneapolis and working for Carrot Health.
+Still related to health - data engineering for predictive models in health care (social determinants of health, healthcare quality, etc.).
+
+So, you can tell I did *NOT* start blogging again - and now it's been 6 years.
+
+Based on COVID work protocols, Novartis allowed for remote work in the disease areas and a position opened up with the Oncology team.
+I was fortunate to return in Oct 2020.
+I was even more fortunate to be able to retire, just before my 60th birthday, in June 2025.
+
+Thus I can say that I truly will be blogging more - for real.
+I just converted my old Wordpress blog into this Quarto-based one.
+
+And I have a bunch of projects - some are based in Minneapolis.
+I'm serving as the Twin Cities city captain for [Bits-in-Bio](https://www.bitsinbio.org).
+I'm also spending more time with [ISAIAH](https://www.isaiahmn.org) - a pro-democracy multi-racial, multi-faith group here in Minnesota.
+
+On the bioinformatics side, there are also a ton of projects.
+
+* A system for bringing [Specification by Example](https://en.wikipedia.org/wiki/Specification_by_example) to R libraries - starting with the [pharmaverse](https://pharmaverse.org)
+* A system for collecting genome and gene references in parquet / duckdb
+* Single-cell / Spatial dataset conversion with duckdb (using the hdf5 extension)
+* Improvements to the OMOP CDM data model
+* VCFs at scale (potentially with Zarr)
+* Potentially some algorithms using simplicial topology with multi-omic datasets (spatial transcriptomics + H&E stain images)
+* and lots more (literally, I have a page of potential projects)
+
+Here in Minnesota, residents at age 62 can attend classes at the UMN for free.
+In a few years, I'll be going back to school but I'm not sure what classes I'll be pursuing.
+
+In short, stay tuned - there will be more getting published here.
+I'll also add notifications to new blog posts on Mastodon and LinkedIn - links you can find at the top of this page.
