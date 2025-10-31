@@ -10,7 +10,44 @@
 <atom:link href="https://brianrepko.github.io/blog/index.xml" rel="self" type="application/rss+xml"/>
 <description>Brian Repko&#39;s blog</description>
 <generator>quarto-1.8.25</generator>
-<lastBuildDate>Tue, 09 Apr 2019 00:00:00 GMT</lastBuildDate>
+<lastBuildDate>Fri, 31 Oct 2025 00:00:00 GMT</lastBuildDate>
+<item>
+  <title>Blogging again…for real</title>
+  <dc:creator>Brian Repko</dc:creator>
+  <link>https://brianrepko.github.io/blog/posts/2025-10-31-blogging-for-real/</link>
+  <description><![CDATA[ 
+
+
+
+
+
+<p>The <a href="../2014-09-28-blogging-again-with-a-change-of-focus/">2014 post</a> that I wrote was about my move into bioinformatics as well as a move to Switzerland. Specifically, working in the Oncology disease area of Novartis Biomedical Research.</p>
+<p>The <a href="../2019-04-09-snowflake-for-biomedical-research/">2019 post</a> that I wrote had me back in Minneapolis and working for Carrot Health. Still related to health - data engineering for predictive models in health care (social determinants of health, healthcare quality, etc.).</p>
+<p>So, you can tell I did <em>NOT</em> start blogging again - and now it’s been 6 years.</p>
+<p>Based on COVID work protocols, Novartis allowed for remote work in the disease areas and a position opened up with the Oncology team. I was fortunate to return in Oct 2020. I was even more fortunate to be able to retire, just before my 60th birthday, in June 2025.</p>
+<p>Thus I can say that I truly will be blogging more - for real. I just converted my old Wordpress blog into this Quarto-based one.</p>
+<p>And I have a bunch of projects - some are based in Minneapolis. I’m serving as the Twin Cities city captain for <a href="https://www.bitsinbio.org">Bits-in-Bio</a>. I’m also spending more time with <a href="https://www.isaiahmn.org">ISAIAH</a> - a pro-democracy multi-racial, multi-faith group here in Minnesota.</p>
+<p>On the bioinformatics side, there are also a ton of projects.</p>
+<ul>
+<li>A system for bringing <a href="https://en.wikipedia.org/wiki/Specification_by_example">Specification by Example</a> to R libraries - starting with the <a href="https://pharmaverse.org">pharmaverse</a></li>
+<li>A system for collecting genome and gene references in parquet / duckdb</li>
+<li>Single-cell / Spatial dataset conversion with duckdb (using the hdf5 extension)</li>
+<li>Improvements to the OMOP CDM data model</li>
+<li>VCFs at scale (potentially with Zarr)</li>
+<li>Potentially some algorithms using simplicial topology with multi-omic datasets (spatial transcriptomics + H&amp;E stain images)</li>
+<li>and lots more (literally, I have a page of potential projects)</li>
+</ul>
+<p>Here in Minnesota, residents at age 62 can attend classes at the UMN for free. In a few years, I’ll be going back to school but I’m not sure what classes I’ll be pursuing.</p>
+<p>In short, stay tuned - there will be more getting published here. I’ll also add notifications to new blog posts on Mastodon and LinkedIn - links you can find at the top of this page.</p>
+
+
+
+ ]]></description>
+  <category>bioinformatics</category>
+  <guid>https://brianrepko.github.io/blog/posts/2025-10-31-blogging-for-real/</guid>
+  <pubDate>Fri, 31 Oct 2025 00:00:00 GMT</pubDate>
+  <media:content url="https://brianrepko.github.io/blog/posts/2025-10-31-blogging-for-real/blogging.png" medium="image" type="image/png" height="123" width="144"/>
+</item>
 <item>
   <title>Snowflake for Biomedical Research</title>
   <dc:creator>Brian Repko</dc:creator>
