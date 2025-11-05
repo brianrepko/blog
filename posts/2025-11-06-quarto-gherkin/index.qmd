@@ -5,6 +5,7 @@ image: logo-rinpharma.png
 date: 2025-11-06
 categories: 
   - "pharmaverse"
+  - "agile"
 ---
 
 Since R/Pharma 2023 in Chicago, I've wanted to look into using the techniques of ATDD (or BDD... or Specification by Example) for testing sets of R packages (aka - an R library).
