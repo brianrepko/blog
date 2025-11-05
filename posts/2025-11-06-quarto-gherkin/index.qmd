@@ -1,0 +1,33 @@
+---
+title: "Validation of R libraries for FDA/EMA submissions"
+description: "R/Pharma talk about quarto, gherkin, and cucumber"
+image: logo-rinpharma.png
+date: 2025-11-06
+categories: 
+  - "pharmaverse"
+---
+
+Since R/Pharma 2023 in Chicago, I've wanted to look into using the techniques of ATDD (or BDD... or Specification by Example) for testing sets of R packages (aka - an R library).
+This was a topic that came up as part of the [R Validation Hub](https://pharmar.org){target="_blank"} work that was presented at that conference.
+Particularly around the discussion on how can multiple pharma companies share their R library validation tests.
+It was a chance to bring a technique from software engineering that I was familiar with (in Java and Python) to the world of R and in particular the [pharmaverse](https://pharmaverse.org){target="_blank"}.
+
+It's now 2 years later and I will have a pre-recorded talk at the (**free!**) virtual [R/Pharma](https://rinpharma.com){target="_blank"} 2025 conference today (Nov 6, 2025).
+R/Pharma makes all the sessions available in about a month on [YouTube](https://www.youtube.com/rinpharma){target="_blank"} - this is a community that shares and grows together after all - but here are the early links to where I host things.
+
+* The pre-recorded video is hosted [here](https://www.learnthinkcode.com/files/rinpharma-2025/rinpharma-2025-atdd.mp4){target="_blank"}
+* The slides are hosted [here](https://www.learnthinkcode.com/files/rinpharma-2025/presentation.html){target="_blank"}
+
+While putting this together, I found [this link](https://gojko.net/2020/03/17/sbe-10-years.html){target="_blank"} from Gojko Adzic, author of "Specification by Example" on where this technique sits in our bag of software engineering tools after 10 years - now 15 years - later.
+It validates that software quality is enhanced by the use of this technique - even if used for requirements only - versus being used for both requirements and automated testing.
+It also validates that the use of the Gherkin-based frameworks - Given/When/Then - are the norm - and fortunately, for R, we now have Jakub Sobolewski's [`{cucumber}`](https://jakubsobolewski.com/cucumber/){target="_blank"} package.
+
+The more I think about what this could look like - and potentially integrated into Quarto - I see the following:
+
+* The "living documentation" is a Quarto website with potentially additional descriptive explanation around gherkin text (along with `sessionInfo()` output)
+* The website can be organized into pages - Quarto documents with ` ```gherkin` code-blocks that contain the actual gherkin text
+* Quarto could be configured with a gherkin engine - for R, that could be `knitr+cucumber` (and can imagine a python engine as well)
+* Quarto rendering invokes knitr and cucumber to execute the gherkin tests and formats the output for `pandoc` to render the results as part of the report
+* The report could be included as part of the validation report
+
+I'm super interested in people's thoughts on this - please reach out via links at the end of the slides.
