@@ -10,7 +10,42 @@
 <atom:link href="https://brianrepko.github.io/blog/index.xml" rel="self" type="application/rss+xml"/>
 <description>Brian Repko&#39;s blog</description>
 <generator>quarto-1.8.25</generator>
-<lastBuildDate>Fri, 31 Oct 2025 00:00:00 GMT</lastBuildDate>
+<lastBuildDate>Thu, 06 Nov 2025 00:00:00 GMT</lastBuildDate>
+<item>
+  <title>Validation of R libraries for FDA/EMA submissions</title>
+  <dc:creator>Brian Repko</dc:creator>
+  <link>https://brianrepko.github.io/blog/posts/2025-11-06-quarto-gherkin/</link>
+  <description><![CDATA[ 
+
+
+
+
+
+<p>Since R/Pharma 2023 in Chicago, I’ve wanted to look into using the techniques of ATDD (or BDD… or Specification by Example) for testing sets of R packages (aka - an R library). This was a topic that came up as part of the <a href="https://pharmar.org" target="_blank">R Validation Hub</a> work that was presented at that conference. Particularly around the discussion on how can multiple pharma companies share their R library validation tests. It was a chance to bring a technique from software engineering that I was familiar with (in Java and Python) to the world of R and in particular the <a href="https://pharmaverse.org" target="_blank">pharmaverse</a>.</p>
+<p>It’s now 2 years later and I will have a pre-recorded talk at the (<strong>free!</strong>) virtual <a href="https://rinpharma.com" target="_blank">R/Pharma</a> 2025 conference today (Nov 6, 2025). R/Pharma makes all the sessions available in about a month on <a href="https://www.youtube.com/rinpharma" target="_blank">YouTube</a> - this is a community that shares and grows together after all - but here are the early links to where I host things.</p>
+<ul>
+<li>The pre-recorded video is hosted <a href="https://www.learnthinkcode.com/files/rinpharma-2025/rinpharma-2025-atdd.mp4" target="_blank">here</a></li>
+<li>The slides are hosted <a href="https://www.learnthinkcode.com/files/rinpharma-2025/presentation.html" target="_blank">here</a></li>
+</ul>
+<p>While putting this together, I found <a href="https://gojko.net/2020/03/17/sbe-10-years.html" target="_blank">this link</a> from Gojko Adzic, author of “Specification by Example” on where this technique sits in our bag of software engineering tools after 10 years - now 15 years - later. It validates that software quality is enhanced by the use of this technique - even if used for requirements only - versus being used for both requirements and automated testing. It also validates that the use of the Gherkin-based frameworks - Given/When/Then - are the norm - and fortunately, for R, we now have Jakub Sobolewski’s <a href="https://jakubsobolewski.com/cucumber/" target="_blank"><code>{cucumber}</code></a> package.</p>
+<p>The more I think about what this could look like - and potentially integrated into Quarto - I see the following:</p>
+<ul>
+<li>The “living documentation” is a Quarto website with potentially additional descriptive explanation around gherkin text (along with <code>sessionInfo()</code> output)</li>
+<li>The website can be organized into pages - Quarto documents with <code>```gherkin</code> code-blocks that contain the actual gherkin text</li>
+<li>Quarto could be configured with a gherkin engine - for R, that could be <code>knitr+cucumber</code> (and can imagine a python engine as well)</li>
+<li>Quarto rendering invokes knitr and cucumber to execute the gherkin tests and formats the output for <code>pandoc</code> to render the results as part of the report</li>
+<li>The report could be included as part of the validation report</li>
+</ul>
+<p>I’m super interested in people’s thoughts on this - please reach out via links at the end of the slides.</p>
+
+
+
+ ]]></description>
+  <category>pharmaverse</category>
+  <guid>https://brianrepko.github.io/blog/posts/2025-11-06-quarto-gherkin/</guid>
+  <pubDate>Thu, 06 Nov 2025 00:00:00 GMT</pubDate>
+  <media:content url="https://brianrepko.github.io/blog/posts/2025-11-06-quarto-gherkin/logo-rinpharma.png" medium="image" type="image/png" height="50" width="144"/>
+</item>
 <item>
   <title>Blogging again…for real</title>
   <dc:creator>Brian Repko</dc:creator>
