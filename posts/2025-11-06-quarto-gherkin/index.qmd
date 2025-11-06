@@ -29,6 +29,7 @@ The more I think about what this could look like - and potentially integrated in
 * The website can be organized into pages - Quarto documents with ` ```gherkin` code-blocks that contain the actual gherkin text
 * Quarto could be configured with a gherkin engine - for R, that could be `knitr+cucumber` (and can imagine a python engine as well)
 * Quarto rendering invokes knitr and cucumber to execute the gherkin tests and formats the output for `pandoc` to render the results as part of the report
+* Steps could be registered on the Quarto page in an ` ```{r}` block or in a package and discovered on package load
 * The report could be included as part of the validation report
 
 I'm super interested in people's thoughts on this - please reach out via links at the end of the slides.
