@@ -9,8 +9,34 @@
 <link>https://brianrepko.github.io/blog/</link>
 <atom:link href="https://brianrepko.github.io/blog/index.xml" rel="self" type="application/rss+xml"/>
 <description>Brian Repko&#39;s blog</description>
-<generator>quarto-1.8.25</generator>
-<lastBuildDate>Thu, 06 Nov 2025 00:00:00 GMT</lastBuildDate>
+<generator>quarto-1.8.26</generator>
+<lastBuildDate>Sat, 20 Dec 2025 00:00:00 GMT</lastBuildDate>
+<item>
+  <title>TileDB and Snowflake integration</title>
+  <dc:creator>Brian Repko</dc:creator>
+  <link>https://brianrepko.github.io/blog/posts/2025-12-20-tiledb-snowflake/</link>
+  <description><![CDATA[ 
+
+
+
+
+
+<p>I attended a webinar / demo of TileDB Carrara and it’s integration with Snowflake a few weeks ago. You can find the <a href="https://www.youtube.com/watch?v=cwcUdzkhVm0" target="_blank">recording on YouTube</a>.</p>
+<p>I am familiar with TileDB as a tensor (aka n-dimensional) data format - a format often used for biomedical data. In fact, they have special formats, beyond general Arrays, for single-cell, VCF, and image data. You can find details at the <a href="https://cloud.tiledb.com/academy/structure/life-sciences/index.html" target="_blank">TileDB Academy website</a>.</p>
+<p>But Carrara was new to me - it is a combination of “data” catalog (vs files) for a given project but also includes a notebook / compute environment. I found this <a href="https://www.youtube.com/watch?v=ic8EhcRStq0" target="_blank">short demo on YouTube</a> as a good overview of Carrara. What was cool to see was how these special formats can be rendered directly in the tool but also the notion of multi-file datasets rendered as a single entry in the project.</p>
+<p>For the integration, you can see your Snowflake-based tabular data in your Carrara environment. And you could also see your TileDB-based multi-dimensional data in your Snowflake data - as tabular data. This basically allows you to merge multi-dimensional and tabular data with notebooks. On the Snowflake side, this could then be used for models or other computation that is added to your Snowflake environment.</p>
+<p>This made me wonder if something similar wasn’t possible for DuckDB - could I see multi-dimensional TileDB data in DuckDB as tables? This doesn’t seem to be supported and, for me as an open source advocate, solidifies the need for open source alternatives to TileDB (eg. hdf5, Zarr, COG). I’ll have a later post on Zarr vs hdf5 (and more) since hdf5 doesn’t work so great on cloud-based storage.</p>
+<p>That said, the ability to integrate TileDB multi-dimensional data and Snowflake together is a great expansion for multi-omic data analysis.</p>
+
+
+
+ ]]></description>
+  <category>bioinformatics</category>
+  <category>data</category>
+  <guid>https://brianrepko.github.io/blog/posts/2025-12-20-tiledb-snowflake/</guid>
+  <pubDate>Sat, 20 Dec 2025 00:00:00 GMT</pubDate>
+  <media:content url="https://brianrepko.github.io/blog/posts/2025-12-20-tiledb-snowflake/logos-snowflake-tiledb.png" medium="image" type="image/png" height="56" width="144"/>
+</item>
 <item>
   <title>Validation of R libraries for FDA/EMA submissions</title>
   <dc:creator>Brian Repko</dc:creator>
