@@ -1,0 +1,31 @@
+---
+title: "TileDB and Snowflake integration"
+description: "Webinar on data integration"
+image: logos-snowflake-tiledb.png
+date: 2025-12-20
+categories: 
+  - "bioinformatics"
+  - "data"
+---
+
+I attended a webinar / demo of TileDB Carrara and it's integration with Snowflake a few weeks ago.
+You can find the [recording on YouTube](https://www.youtube.com/watch?v=cwcUdzkhVm0){target="_blank"}.
+
+I am familiar with TileDB as a tensor (aka n-dimensional) data format - a format often used for biomedical data.
+In fact, they have special formats, beyond general Arrays, for single-cell, VCF, and image data.
+You can find details at the [TileDB Academy website](https://cloud.tiledb.com/academy/structure/life-sciences/index.html){target="_blank"}.
+
+But Carrara was new to me - it is a combination of "data" catalog (vs files) for a given project but also includes a notebook / compute environment.
+I found this [short demo on YouTube](https://www.youtube.com/watch?v=ic8EhcRStq0){target="_blank"} as a good overview of Carrara.
+What was cool to see was how these special formats can be rendered directly in the tool but also the notion of multi-file datasets rendered as a single entry in the project.
+
+For the integration, you can see your Snowflake-based tabular data in your Carrara environment.
+And you could also see your TileDB-based multi-dimensional data in your Snowflake data - as tabular data.
+This basically allows you to merge multi-dimensional and tabular data with notebooks.
+On the Snowflake side, this could then be used for models or other computation that is added to your Snowflake environment.
+
+This made me wonder if something similar wasn't possible for DuckDB - could I see multi-dimensional TileDB data in DuckDB as tables?
+This doesn't seem to be supported and, for me as an open source advocate, solidifies the need for open source alternatives to TileDB (eg. hdf5, Zarr, COG).
+I'll have a later post on Zarr vs hdf5 (and more) since hdf5 doesn't work so great on cloud-based storage.
+
+That said, the ability to integrate TileDB multi-dimensional data and Snowflake together is a great expansion for multi-omic data analysis.
