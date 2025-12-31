@@ -1,0 +1,11 @@
+---
+title: "Dataset-JSON"
+description: "Part 1 - intro to the series"
+image: datasetjson.png
+date: 2025-12-31
+categories: 
+  - "pharmaverse"
+  - "data"
+---
+
+[text](url){target="_blank"}
