@@ -8,4 +8,133 @@ categories:
   - "data"
 ---
 
-[text](url){target="_blank"}
+As part of R/Pharma this year, I attended a [workshop](https://atorus-research.github.io/datasetjson_workshop/){target="_blank"} on the CDISC Dataset-JSON standard.
+This was a great workshop and props/kudos/flowers to all the folks that put that together.
+More recently, CDISC [announced](https://mailchi.mp/cdisc.org/2025bod-12872980?e=d16406719d){target="_blank"} that v1.0 of the API standard is released as well as the supplementary details on compression (aka Compressed Dataset-JSON v1.1).
+
+This later announcement (and some a review of Pilot 5 updates) gives me a chance to dive into this important set of specifications and updates - thus this series.
+
+I'm planning to do an overview in this part 1, go over some potential issues and clarifications in part 2, and then go over the REST API in part 3 (which TBH I've not looked at in detail yet, so it goes last).
+
+## Background
+
+The data sent to regulatory authorities (eg. FDA for USA, EMA for EU, PMDA for Japan, etc.) typically conforms to [CDISC](https://www.cdisc.org){target="_blank"} international standards.
+When transferring this (tabular) data - from sponsor to RA - the [SAS V5 XPORT format](https://www.loc.gov/preservation/digital/formats/fdd/fdd000464.shtml){target="_blank"} (aka "XPT") is currently used (required for the FDA).
+XPT was defined in 1989 and its use by the FDA was made official in 1999.
+It has many disadvantages - some of which we will highlight below.
+
+Also in 1999, CDISC created the Operational Data Model (ODM).
+ODM is a foundational data standard that underlies many of the other CDISC standards and is XML-based.
+Between 2000 and 2005, ODM versions 1.0 through 1.3 were released.
+Some point releases, ODM v1.3.1 and v1.3.2 were released in 2010 and 2013 respectively.
+So from 1999 to 2013, data was defined based on ODM XML foundational standards and still transferred in XPT.
+
+As industry is exploring coding alternatives to SAS - and potentially with sponsors creating all submission materials with R (or without SAS) - other data transfer format alternatives are needed.
+Moving to new data transfer standards will also allow CDISC to move beyond the limitations imposed by the XPT format.
+
+Given that ODM was XML-based, in 2012, work was done to create Dataset-XML, with version 1.0 released in 2014.
+This is a XML-based data transfer format based on ODM v1.3.2.
+However, it was found that Dataset-XML created data files that were quite large (already an issue for XPT) and it was not widely adopted by industry.
+
+Skip ahead ten years, and in 2023, ODM v2.0 was released.
+Dataset-XML v1.0 was not updated - it is still an extension of the ODM XML schema (as far as I can tell with a cursory review) and may not need an update.
+
+As part of the ODM v2.0 work, on the data transfer side, Dataset-JSON v1.0 was also released in 2023.
+One of the best articles on the need for, development of, and plans for Dataset-JSON is [this one from Sam Hume](https://www.clinicalleader.com/doc/no-more-xpt-piloting-new-dataset-json-for-fda-submissions-0001){target="_blank"}.
+
+A number of hackathons and pilot projects were done - some issues found - and then Dataset-JSON v1.1 was released in Dec 2024 to address those issues.
+Some issues required changes to the specification - some were addressed in the User Guide.
+[Here](https://phuse.s3.eu-central-1.amazonaws.com/Deliverables/Optimizing+the+Use+of+Data+Standards/WP-88+Dataset-JSON+Report.pdf){target="_blank"} is the report, from PHUSE, of those pilot projects.
+
+Lastly, as mentioned above, the Dataset-JSON API v1.0 and Compressed Dataset-JSON v1.1 standards were released a few weeks ago in Dec 2025.
+
+
+## Dataset-JSON
+
+The Dataset-JSON work actually has multiple components - with a view towards transfer of data via APIs instead of via files.
+In particular, this could become part of how sponsors can collect data from various other systems and collaborators - EDCs, CROs, etc.
+
+These components are:
+
+* Dataset-JSON specification and schema ([github repository](https://github.com/cdisc-org/DataExchange-DatasetJson){target="_blank"})
+  * Dataset-JSON v1.1
+  * The NDJSON representation of Dataset-JSON
+  * Compressed Dataset-JSON v1.1 (aka DSJC)
+  * Dataset-JSON schema
+  * User's Guide ([cdisc wiki](https://wiki.cdisc.org/display/PUB/Dataset-JSON+v1.1+User%27s+Guide){target="_blank"})
+
+and
+
+* Dataset-JSON API ([github repository](https://github.com/cdisc-org/DataExchange-DatasetJson-API){target="_blank"})
+  * Specification as HTML or OpenAPI
+  * User's Guide
+
+## Issues with XPT
+
+Anyone that has looked at clinical trial data has wondered why column names are limited to 8 characters - it's XPT.
+
+The data is always tabular (rows and columns).
+Columns have name, label / description, type, and length and formatting options.
+There is no row identifier (unlike R data.frames) - access, _in SAS_, is via row number (`POINT=`) or via indices defined on top of the data (`KEY=`).
+
+Here is a quick list of issues with XPT v5:
+
+* Column/variable types - only CHARACTER (string) and DOUBLE (numeric - integer or floating point)
+* Column names are limited to 8 alphanumeric + `_` characters
+* Column labels are limited to 40 characters
+* Character values are US ASCII only with max length of 200 characters/bytes
+* Character values are stored with padding (so, larger than they need to be)
+* Numeric values are stored as IBM hexidecimal floating point (aka HFP, aka IBM-style double) format
+  * Which is **NOT** IEEE 754, see  [wikipedia](https://en.wikipedia.org/wiki/IBM_hexadecimal_floating-point){target="_blank"}
+  * This is why XPT is technically a binary file format - numeric data encoding in the file
+* Inability to compress files - leads to data set splitting
+* There is no internally stored metadata
+  * eg. file metadata, formatting on numerics, padding for characters, date/time formatting, keys
+
+Note that modern versions of SAS use IEEE 754 internally for floating point data - it is only the XPT format that uses the HFP format.
+Also note that SAS does support date, time, and datetime variables - these are internally stored as numbers - with datetime point 0 being Jan 1, 1960 00:00:00 UTC.
+Actually, I have no idea how timezones work in SAS (all data is UTC and timezone is a system option?).
+
+There is an XPT v8 format as well which made the following changes:
+
+* Column names are extended to 32 characters (case sensitive)
+* Column labels are extended to 256 bytes
+* Character values are extended 32767 bytes
+* It is not clear if US ASCII is still a limitation or not (note the use of bytes vs character limits) - seems like it is limited to US ASCII
+
+In the end, there was not much industry uptake of XPT v8 and efforts were put elsewhere.
+
+## Quick overview of Dataset-JSON
+
+Dataset-JSON is similar to XPT in that it is a single-file for tabular data.
+
+As JSON ([link to html version of spec here](https://cdisc-org.github.io/DataExchange-DatasetJson/doc/dataset-json1-1.html){target="_blank"}), a dataset is a single object.
+Dataset metadata are attributes in that object, there is a `columns` array for column definitions, and then a `rows` array-of-arrays for data values.
+
+Column definitions have the following attributes - unique ID (`itemOID`), `name`, `label`, `dataType`, `targetDataType`, `length`, `displayFormat`, and `keySequence`.
+
+Note that `dataType` is the "logical" data type - tied to ODM - with values of `string`, `integer`, `decimal`, `float`, `double`, `boolean`, `datetime`, `date`, `time`, and `URI`.
+
+The column attribute `targetDataType` is used for some logical types (decimals as strings, date/time/datetime as integers).
+We'll discuss this more in part 2.
+It looks like boolean values do use JSON `true` and `false` (in other places I've seen these not used in favor of "Y","N" strings).
+Missing values are represented with JSON `null`.
+The empty string can be a value.
+
+For the NDJSON representation - it is the same as above with the following changes:
+
+* Each line is a JSON object
+* Row 1 is a JSON object that is all metadata and column array
+* Row 2-n are each an array of data
+  * This is basically the `rows` array with "lines" being entries in the array-of-array
+  
+NDJSON is very useful for streaming large sets of data.
+
+## Next article
+
+In part 2, I'll make a list of some of the issues that come up in reading the specification and how some of the issues found in the pilot were handled.
+
+Overall, I'm thrilled with this effort as it opens up clinical trial data to any programming language AND data transfer via API - but some details need some discussion.
+My intent is to highlight and/or clarify points related to data representation (from someone with a whole 30 year career in data engineering) and not to only criticize.
+
+I hope those discussions will get added to the User's Guide or maybe more [pharmaverse blog](https://pharmaverse.github.io/blog/){target="_blank"} posts (like [here](https://pharmaverse.github.io/blog/posts/2023-10-30_floating_point/floating_point.html){target="_blank"}, [here](https://pharmaverse.github.io/blog/posts/2023-09-26_date_functions_and_imputation/date_functions_and_imputation.html){target="_blank"}, and [here](https://pharmaverse.github.io/blog/posts/2023-07-24_rounding/rounding.html){target="_blank"}).
