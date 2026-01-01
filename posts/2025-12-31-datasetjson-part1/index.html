@@ -1,0 +1,680 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.8.26">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Brian Repko">
+<meta name="dcterms.date" content="2025-12-31">
+<meta name="description" content="Part 1 - intro to the series">
+
+<title>Dataset-JSON – Learning, Thinking, and Coding</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<link href="../../favicon.ico" rel="icon">
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-587c61ba64f3a5504c4d52d930310e48.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-81161df70946103be4ff68a34233701c.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="../../styles.css">
+</head>
+
+<body class="nav-fixed fullcontent quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top quarto-banner">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">Learning, Thinking, and Coding</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://www.learnthinkcode.com/"> <i class="bi bi-house-fill" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/brianrepko/blog/"> <i class="bi bi-github" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://hachyderm.io/@brianrepko"> <i class="bi bi-mastodon" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://www.linkedin.com/in/brianrepko/"> <i class="bi bi-linkedin" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="../../index.xml"> <i class="bi bi-rss" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<header id="title-block-header" class="quarto-title-block default page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <h1 class="title">Dataset-JSON</h1>
+                  <div>
+        <div class="description">
+          Part 1 - intro to the series
+        </div>
+      </div>
+                          <div class="quarto-categories">
+                <div class="quarto-category">pharmaverse</div>
+                <div class="quarto-category">data</div>
+              </div>
+                  </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta">
+
+      <div>
+      <div class="quarto-title-meta-heading">Author</div>
+      <div class="quarto-title-meta-contents">
+               <p>Brian Repko </p>
+            </div>
+    </div>
+      
+      <div>
+      <div class="quarto-title-meta-heading">Published</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">December 31, 2025</p>
+      </div>
+    </div>
+    
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    
+<!-- main -->
+<main class="content quarto-banner-title-block" id="quarto-document-content">
+
+
+
+
+
+<p>As part of R/Pharma this year, I attended a <a href="https://atorus-research.github.io/datasetjson_workshop/" target="_blank">workshop</a> on the CDISC Dataset-JSON standard. This was a great workshop and props/kudos/flowers to all the folks that put that together. More recently, CDISC <a href="https://mailchi.mp/cdisc.org/2025bod-12872980?e=d16406719d" target="_blank">announced</a> that v1.0 of the API standard is released as well as the supplementary details on compression (aka Compressed Dataset-JSON v1.1).</p>
+<p>This later announcement (and some a review of Pilot 5 updates) gives me a chance to dive into this important set of specifications and updates - thus this series.</p>
+<p>I’m planning to do an overview in this part 1, go over some potential issues and clarifications in part 2, and then go over the REST API in part 3 (which TBH I’ve not looked at in detail yet, so it goes last).</p>
+<section id="background" class="level2">
+<h2 class="anchored" data-anchor-id="background">Background</h2>
+<p>The data sent to regulatory authorities (eg. FDA for USA, EMA for EU, PMDA for Japan, etc.) typically conforms to <a href="https://www.cdisc.org" target="_blank">CDISC</a> international standards. When transferring this (tabular) data - from sponsor to RA - the <a href="https://www.loc.gov/preservation/digital/formats/fdd/fdd000464.shtml" target="_blank">SAS V5 XPORT format</a> (aka “XPT”) is currently used (required for the FDA). XPT was defined in 1989 and its use by the FDA was made official in 1999. It has many disadvantages - some of which we will highlight below.</p>
+<p>Also in 1999, CDISC created the Operational Data Model (ODM). ODM is a foundational data standard that underlies many of the other CDISC standards and is XML-based. Between 2000 and 2005, ODM versions 1.0 through 1.3 were released. Some point releases, ODM v1.3.1 and v1.3.2 were released in 2010 and 2013 respectively. So from 1999 to 2013, data was defined based on ODM XML foundational standards and still transferred in XPT.</p>
+<p>As industry is exploring coding alternatives to SAS - and potentially with sponsors creating all submission materials with R (or without SAS) - other data transfer format alternatives are needed. Moving to new data transfer standards will also allow CDISC to move beyond the limitations imposed by the XPT format.</p>
+<p>Given that ODM was XML-based, in 2012, work was done to create Dataset-XML, with version 1.0 released in 2014. This is a XML-based data transfer format based on ODM v1.3.2. However, it was found that Dataset-XML created data files that were quite large (already an issue for XPT) and it was not widely adopted by industry.</p>
+<p>Skip ahead ten years, and in 2023, ODM v2.0 was released. Dataset-XML v1.0 was not updated - it is still an extension of the ODM XML schema (as far as I can tell with a cursory review) and may not need an update.</p>
+<p>As part of the ODM v2.0 work, on the data transfer side, Dataset-JSON v1.0 was also released in 2023. One of the best articles on the need for, development of, and plans for Dataset-JSON is <a href="https://www.clinicalleader.com/doc/no-more-xpt-piloting-new-dataset-json-for-fda-submissions-0001" target="_blank">this one from Sam Hume</a>.</p>
+<p>A number of hackathons and pilot projects were done - some issues found - and then Dataset-JSON v1.1 was released in Dec 2024 to address those issues. Some issues required changes to the specification - some were addressed in the User Guide. <a href="https://phuse.s3.eu-central-1.amazonaws.com/Deliverables/Optimizing+the+Use+of+Data+Standards/WP-88+Dataset-JSON+Report.pdf" target="_blank">Here</a> is the report, from PHUSE, of those pilot projects.</p>
+<p>Lastly, as mentioned above, the Dataset-JSON API v1.0 and Compressed Dataset-JSON v1.1 standards were released a few weeks ago in Dec 2025.</p>
+</section>
+<section id="dataset-json" class="level2">
+<h2 class="anchored" data-anchor-id="dataset-json">Dataset-JSON</h2>
+<p>The Dataset-JSON work actually has multiple components - with a view towards transfer of data via APIs instead of via files. In particular, this could become part of how sponsors can collect data from various other systems and collaborators - EDCs, CROs, etc.</p>
+<p>These components are:</p>
+<ul>
+<li>Dataset-JSON specification and schema (<a href="https://github.com/cdisc-org/DataExchange-DatasetJson" target="_blank">github repository</a>)
+<ul>
+<li>Dataset-JSON v1.1</li>
+<li>The NDJSON representation of Dataset-JSON</li>
+<li>Compressed Dataset-JSON v1.1 (aka DSJC)</li>
+<li>Dataset-JSON schema</li>
+<li>User’s Guide (<a href="https://wiki.cdisc.org/display/PUB/Dataset-JSON+v1.1+User%27s+Guide" target="_blank">cdisc wiki</a>)</li>
+</ul></li>
+</ul>
+<p>and</p>
+<ul>
+<li>Dataset-JSON API (<a href="https://github.com/cdisc-org/DataExchange-DatasetJson-API" target="_blank">github repository</a>)
+<ul>
+<li>Specification as HTML or OpenAPI</li>
+<li>User’s Guide</li>
+</ul></li>
+</ul>
+</section>
+<section id="issues-with-xpt" class="level2">
+<h2 class="anchored" data-anchor-id="issues-with-xpt">Issues with XPT</h2>
+<p>Anyone that has looked at clinical trial data has wondered why column names are limited to 8 characters - it’s XPT.</p>
+<p>The data is always tabular (rows and columns). Columns have name, label / description, type, and length and formatting options. There is no row identifier (unlike R data.frames) - access, <em>in SAS</em>, is via row number (<code>POINT=</code>) or via indices defined on top of the data (<code>KEY=</code>).</p>
+<p>Here is a quick list of issues with XPT v5:</p>
+<ul>
+<li>Column/variable types - only CHARACTER (string) and DOUBLE (numeric - integer or floating point)</li>
+<li>Column names are limited to 8 alphanumeric + <code>_</code> characters</li>
+<li>Column labels are limited to 40 characters</li>
+<li>Character values are US ASCII only with max length of 200 characters/bytes</li>
+<li>Character values are stored with padding (so, larger than they need to be)</li>
+<li>Numeric values are stored as IBM hexidecimal floating point (aka HFP, aka IBM-style double) format
+<ul>
+<li>Which is <strong>NOT</strong> IEEE 754, see <a href="https://en.wikipedia.org/wiki/IBM_hexadecimal_floating-point" target="_blank">wikipedia</a></li>
+<li>This is why XPT is technically a binary file format - numeric data encoding in the file</li>
+</ul></li>
+<li>Inability to compress files - leads to data set splitting</li>
+<li>There is no internally stored metadata
+<ul>
+<li>eg. file metadata, formatting on numerics, padding for characters, date/time formatting, keys</li>
+</ul></li>
+</ul>
+<p>Note that modern versions of SAS use IEEE 754 internally for floating point data - it is only the XPT format that uses the HFP format. Also note that SAS does support date, time, and datetime variables - these are internally stored as numbers - with datetime point 0 being Jan 1, 1960 00:00:00 UTC. Actually, I have no idea how timezones work in SAS (all data is UTC and timezone is a system option?).</p>
+<p>There is an XPT v8 format as well which made the following changes:</p>
+<ul>
+<li>Column names are extended to 32 characters (case sensitive)</li>
+<li>Column labels are extended to 256 bytes</li>
+<li>Character values are extended 32767 bytes</li>
+<li>It is not clear if US ASCII is still a limitation or not (note the use of bytes vs character limits) - seems like it is limited to US ASCII</li>
+</ul>
+<p>In the end, there was not much industry uptake of XPT v8 and efforts were put elsewhere.</p>
+</section>
+<section id="quick-overview-of-dataset-json" class="level2">
+<h2 class="anchored" data-anchor-id="quick-overview-of-dataset-json">Quick overview of Dataset-JSON</h2>
+<p>Dataset-JSON is similar to XPT in that it is a single-file for tabular data.</p>
+<p>As JSON (<a href="https://cdisc-org.github.io/DataExchange-DatasetJson/doc/dataset-json1-1.html" target="_blank">link to html version of spec here</a>), a dataset is a single object. Dataset metadata are attributes in that object, there is a <code>columns</code> array for column definitions, and then a <code>rows</code> array-of-arrays for data values.</p>
+<p>Column definitions have the following attributes - unique ID (<code>itemOID</code>), <code>name</code>, <code>label</code>, <code>dataType</code>, <code>targetDataType</code>, <code>length</code>, <code>displayFormat</code>, and <code>keySequence</code>.</p>
+<p>Note that <code>dataType</code> is the “logical” data type - tied to ODM - with values of <code>string</code>, <code>integer</code>, <code>decimal</code>, <code>float</code>, <code>double</code>, <code>boolean</code>, <code>datetime</code>, <code>date</code>, <code>time</code>, and <code>URI</code>.</p>
+<p>The column attribute <code>targetDataType</code> is used for some logical types (decimals as strings, date/time/datetime as integers). We’ll discuss this more in part 2. It looks like boolean values do use JSON <code>true</code> and <code>false</code> (in other places I’ve seen these not used in favor of “Y”,“N” strings). Missing values are represented with JSON <code>null</code>. The empty string can be a value.</p>
+<p>For the NDJSON representation - it is the same as above with the following changes:</p>
+<ul>
+<li>Each line is a JSON object</li>
+<li>Row 1 is a JSON object that is all metadata and column array</li>
+<li>Row 2-n are each an array of data
+<ul>
+<li>This is basically the <code>rows</code> array with “lines” being entries in the array-of-array</li>
+</ul></li>
+</ul>
+<p>NDJSON is very useful for streaming large sets of data.</p>
+</section>
+<section id="next-article" class="level2">
+<h2 class="anchored" data-anchor-id="next-article">Next article</h2>
+<p>In part 2, I’ll make a list of some of the issues that come up in reading the specification and how some of the issues found in the pilot were handled.</p>
+<p>Overall, I’m thrilled with this effort as it opens up clinical trial data to any programming language AND data transfer via API - but some details need some discussion. My intent is to highlight and/or clarify points related to data representation (from someone with a whole 30 year career in data engineering) and not to only criticize.</p>
+<p>I hope those discussions will get added to the User’s Guide or maybe more <a href="https://pharmaverse.github.io/blog/" target="_blank">pharmaverse blog</a> posts (like <a href="https://pharmaverse.github.io/blog/posts/2023-10-30_floating_point/floating_point.html" target="_blank">here</a>, <a href="https://pharmaverse.github.io/blog/posts/2023-09-26_date_functions_and_imputation/date_functions_and_imputation.html" target="_blank">here</a>, and <a href="https://pharmaverse.github.io/blog/posts/2023-07-24_rounding/rounding.html" target="_blank">here</a>).</p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/brianrepko\.github\.io\/blog");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
