@@ -34,6 +34,19 @@
 <p>This is part 2 of a series on dataset-json, you can find part 1 <a href="https://brianrepko.github.io/blog/posts/2025-12-31-datasetjson-part1/" target="_blank">here</a> for an overview of dataset-json.</p>
 </div>
 </div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>CDISC workshop
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>There is a planned Dataset-JSON Hands-On Implementation workshop on 18 May 2026 from 0900-1300 CET at the 2026 CDISC Europe Interchange conference in Milan. See <a href="https://www.cdisc.org/events/interchange/2026-cdisc-europe-interchange">the main website</a> or <a href="https://web.cvent.com/event/b32aaba1-214b-486e-8b5a-fdc8342f9794/websitePage:645d57e4-75eb-4769-b2c0-f201a0bfc6ce">here</a> for details.</p>
+</div>
+</div>
 <section id="intention" class="level2">
 <h2 class="anchored" data-anchor-id="intention">Intention</h2>
 <p>Similar to how art can be additive (painting) or subtractive (sculpting), computational work can be positive (“how do I get to a result”) or negative (“what could go wrong here”). Most of us develop in both ways of working - and we tend to have a default / stronger side. Mine is the negative - which is why I think I’ve always focused on risk with systems development. I mention this because this blog post falls 100% in the - what could go wrong here category. This is me going through a specification and calling out anything that feels risky. I hope this spawns conversations and github issues and wiki updates and PRs. This is me also calling out where I’d love to contribute - not just complain. I’ll also add that I am not a SAS programmer so I may definitely get some items wrong here.</p>
