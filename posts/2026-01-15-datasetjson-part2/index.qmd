@@ -14,6 +14,12 @@ categories:
 This is part 2 of a series on dataset-json, you can find part 1 [here](https://brianrepko.github.io/blog/posts/2025-12-31-datasetjson-part1/){target="_blank"} for an overview of dataset-json.
 :::
 
+::: callout-note
+## CDISC workshop
+
+There is a planned Dataset-JSON Hands-On Implementation workshop on 18 May 2026 from 0900-1300 CET at the 2026 CDISC Europe Interchange conference in Milan. See [the main website](https://www.cdisc.org/events/interchange/2026-cdisc-europe-interchange) or [here](https://web.cvent.com/event/b32aaba1-214b-486e-8b5a-fdc8342f9794/websitePage:645d57e4-75eb-4769-b2c0-f201a0bfc6ce) for details.
+:::
+
 ## Intention
 
 Similar to how art can be additive (painting) or subtractive (sculpting), computational work can be positive ("how do I get to a result") or negative ("what could go wrong here").
