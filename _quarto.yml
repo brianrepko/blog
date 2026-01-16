@@ -25,6 +25,8 @@ format:
       - sandstone
       - brand
     css: styles.css
+    link-external-icon: true
+    link-external-newwindow: true
 
 
 
