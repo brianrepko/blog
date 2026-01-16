@@ -9,8 +9,290 @@
 <link>https://brianrepko.github.io/blog/</link>
 <atom:link href="https://brianrepko.github.io/blog/index.xml" rel="self" type="application/rss+xml"/>
 <description>Brian Repko&#39;s blog</description>
-<generator>quarto-1.8.26</generator>
-<lastBuildDate>Wed, 31 Dec 2025 00:00:00 GMT</lastBuildDate>
+<generator>quarto-1.8.27</generator>
+<lastBuildDate>Thu, 15 Jan 2026 00:00:00 GMT</lastBuildDate>
+<item>
+  <title>Dataset-JSON</title>
+  <dc:creator>Brian Repko</dc:creator>
+  <link>https://brianrepko.github.io/blog/posts/2026-01-15-datasetjson-part2/</link>
+  <description><![CDATA[ 
+
+
+
+
+
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Series
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>This is part 2 of a series on dataset-json, you can find part 1 <a href="https://brianrepko.github.io/blog/posts/2025-12-31-datasetjson-part1/" target="_blank">here</a> for an overview of dataset-json.</p>
+</div>
+</div>
+<section id="intention" class="level2">
+<h2 class="anchored" data-anchor-id="intention">Intention</h2>
+<p>Similar to how art can be additive (painting) or subtractive (sculpting), computational work can be positive (“how do I get to a result”) or negative (“what could go wrong here”). Most of us develop in both ways of working - and we tend to have a default / stronger side. Mine is the negative - which is why I think I’ve always focused on risk with systems development. I mention this because this blog post falls 100% in the - what could go wrong here category. This is me going through a specification and calling out anything that feels risky. I hope this spawns conversations and github issues and wiki updates and PRs. This is me also calling out where I’d love to contribute - not just complain. I’ll also add that I am not a SAS programmer so I may definitely get some items wrong here.</p>
+<p>From part 1, here is the <a href="https://cdisc-org.github.io/DataExchange-DatasetJson/doc/dataset-json1-1.html">link to the html version of the spec</a> - so let’s dive in…</p>
+</section>
+<section id="background---xml-and-json-technologies" class="level2">
+<h2 class="anchored" data-anchor-id="background---xml-and-json-technologies">Background - XML and JSON technologies</h2>
+<p>Within the XML set of specifications and technologies - we have the following:</p>
+<ul>
+<li><a href="https://www.w3.org/TR/xml/">XML</a> - data format</li>
+<li><a href="https://www.w3.org/TR/xmlschema11-2/">XML Schema</a> - structure and data types with simple validation and constraints</li>
+<li><a href="https://schematron.com">Schematron</a> - rule-based content validation, complex relationships, and business logic</li>
+</ul>
+<p>For JSON we have a similar set of specifications and technologies:</p>
+<ul>
+<li><a href="https://www.json.org/json-en.html">JSON</a> - data format</li>
+<li><a href="https://json-schema.org">JSON schema</a> - structure and data types with simple validation and constraints</li>
+<li><a href="https://amer-ali.github.io/jsontron/">jsontron</a> - a port of Schematron for JSON (not widely used)</li>
+</ul>
+<p>The reason that I want to bring this up is that some of the issues below relate to “where” something belongs and potentially having it in the wrong space.</p>
+<p>Also, I think that the use of jsontron would be interesting in this space potentially.</p>
+<section id="data-types" class="level3">
+<h3 class="anchored" data-anchor-id="data-types">Data Types</h3>
+<p>JSON, JSON schema, and dataset-json work with a set of data types. Note that JSON / JSON schema are working on object / property definition and dataset-json is column definition. Here is a table that goes over what is available for each specification in relation to each other:</p>
+<table class="caption-top table">
+<caption>Data Types</caption>
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>JSON</th>
+<th>JSON schema</th>
+<th>dataset-json</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>boolean</td>
+<td>boolean</td>
+<td>boolean</td>
+</tr>
+<tr class="even">
+<td>string</td>
+<td>string</td>
+<td>string</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td></td>
+<td>decimal</td>
+</tr>
+<tr class="even">
+<td></td>
+<td></td>
+<td>datetime</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td></td>
+<td>date</td>
+</tr>
+<tr class="even">
+<td></td>
+<td></td>
+<td>time</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td></td>
+<td>URI</td>
+</tr>
+<tr class="even">
+<td>number</td>
+<td>integer</td>
+<td>integer</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td>number</td>
+<td>float</td>
+</tr>
+<tr class="even">
+<td></td>
+<td></td>
+<td>double</td>
+</tr>
+<tr class="odd">
+<td>array</td>
+<td>array</td>
+<td>-</td>
+</tr>
+<tr class="even">
+<td>object</td>
+<td>object</td>
+<td>-</td>
+</tr>
+</tbody>
+</table>
+<p>Note that dataset-json has both a JSON schema and LinkML version of the schema. The JSON schema is based on the 2019-09 standard (vs the latest, which is 2020-12).</p>
+<p>Also note that JSON schema has various constraints added to the type. In general, objects can also specify, via a <code>required</code> array, which properties are required. There is also the capability to do “required-if” logic (which could also be a jsontron rule).</p>
+<p>For string-based data types, we have <code>minLength</code>, <code>maxLength</code>, <code>pattern</code>, and <code>format</code>. JSON schema has known formats for <code>date-time</code>, <code>date</code>, <code>time</code>, and <code>uri</code> (and <code>iri</code>) - but <strong>dataset-json does not use these</strong>. It makes use of <code>pattern</code> for validation of those string-based types. This may be the case that <code>pattern</code> is actually used when validating and <code>format</code> may not be. That is probably dependent on the validator software. You can find the full list of supported JSON schema formats <a href="https://json-schema.org/understanding-json-schema/reference/type#built-in-formats">here</a>.</p>
+<p>For numeric data, JSON schema separates integers (ℤ) from decimal (𝔻) data. Note that decimals (𝔻) is a subset of the rationals (ℚ) - given by <img src="https://latex.codecogs.com/png.latex?a/10%5En"> (where <img src="https://latex.codecogs.com/png.latex?a"> and <img src="https://latex.codecogs.com/png.latex?n"> are in ℤ). Thus <img src="https://latex.codecogs.com/png.latex?1/3"> is in ℚ but not in 𝔻 (it repeats forever) and thus for some values we have to deal with both precision and rounding.</p>
+<p>The dataset-json data types of <code>float</code> and <code>double</code> are intended to represent in-memory IEEE 754 single- and double-precision constructs. It is basically saying what data type to use in the environment (SAS, R, python, etc.) that will import this data - or at least the <em>capability</em> of said environment (eg. R only has doubles - not floats). There are the well-known issues of converting values in 𝔻 to a base 2 binary format.</p>
+<p>Interestingly, there is no JSON schema format for dataset-json’s “decimal” - again that is using a data type to specify the in-memory representation for this column (aka decimal stored as a string).</p>
+<p>In terms of character encoding for the file, later versions of JSON require UTF-8 encoding. The dataset-json User’s Guide refers to optional usage of UTF-16 or UTF-32 but this is not allowed in <a href="https://datatracker.ietf.org/doc/html/rfc8259">RFC8259</a>.</p>
+<p>Also, a general issue with JSON is that the Unicode escape - <code>\uXXXX</code> - only supports Unicode’s Basic Multilingual Plane (BMP) and not full Unicode. One needs to either embed the codepoints directly (UTF-8 supports all Unicode) or escape as surrogate pair.</p>
+<p>And then for moving from US-ASCII to Unicode…</p>
+<p><img src="https://brianrepko.github.io/blog/posts/2026-01-15-datasetjson-part2/unicode-meme.jpg" class="img-fluid"></p>
+<p>Once you have Unicode strings, there are many issues that one needs to worry about. I’m not going to go over all of these but here is a short list (many from <a href="https://tonsky.me/blog/unicode/">here</a>).</p>
+<ul>
+<li>Unicode normalization</li>
+<li>length of a Unicode string (with grapheme clusters - particularly for Asian languages)</li>
+<li>casing (upper/lower)</li>
+<li>sorting / collation</li>
+<li>right-to-left vs left-to-right languages</li>
+<li>regex class membership (eg. <code>:alpha:</code>)</li>
+</ul>
+<p>I get that we are looking to move beyond the current XPT limitations at a later stage. At some point, I’m sure CDISC will have a number of workshops on “Internationalizing Clinical Trial Data”.</p>
+</section>
+</section>
+<section id="our-problem-domain" class="level2">
+<h2 class="anchored" data-anchor-id="our-problem-domain">Our Problem Domain</h2>
+<p>I think it’s useful to also step back and share what the actual problem we are trying to solve here is. We will have, as part of the data and coding related to a clinical trial, “data frames”. For SAS, these are datasets, for R, these are data.frame-s and for python, these are pandas.DataFrame-s (or polars?) and in SQL, these are tables.</p>
+<p>We have two main contexts - same-language serialization (export / import) and different-language serialization. In both these contexts, the ultimate question is - is the original in-memory data frame the same as the resulting in-memory data frame. When we are in the same-language context (SAS → JSON → SAS), “sameness” of in-memory data frames can consider deeper properties of the internal data structure. When we are in the different-language context (R → JSON → SAS), “sameness” of the in-memory data frames does not have access to those deeper properties - internal data types used for the columns are in different programming languages and data frame classes have different properties - SAS datasets can have a “key” (hash), multiple indices, display formats etc. R data.frames have row.names which SAS does not (similar to key but SAS keys don’t <em>have to</em> be unique).</p>
+<p>The reason that I bring this up is that some parts of the dataset-json specification are for the <strong>SAS-specific same-language context</strong>.</p>
+<p>I actually think that we might not care about a different-language context as clinical trial validation from the regulatory authority will be same-language. However, as clinical trial code becomes more polyglot - some SAS, some R, some python - then we might need to consider different-language contexts.</p>
+</section>
+<section id="oids-and-the-model-beyond-a-data-frame" class="level2">
+<h2 class="anchored" data-anchor-id="oids-and-the-model-beyond-a-data-frame">OIDs and the model beyond a “data frame”</h2>
+<p>As I was initially reviewing the dataset-json specification, one quick item that stuck out was that there was no way to say if a column allowed for missing values or not - that is - is a column required.</p>
+<p>This led me into the ODM model and the various OID columns in the specification.</p>
+<p>The dataset-json specification is not <em>ONLY</em> “serialized data frames” - it is “serialized data frames within a catalog”. That catalog is the <code>define.xml</code> that is sent along with the <code>.json</code> or <code>.ndjson</code> or <code>.dsjc</code> files. This gets a bit too deep and needs it’s own blog post but in short - you can think of the following connections.</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>ODM term</th>
+<th>concept</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Study</td>
+<td>Study</td>
+</tr>
+<tr class="even">
+<td>ItemGroup</td>
+<td>Domain or data frame metadata</td>
+</tr>
+<tr class="odd">
+<td>Item</td>
+<td>Variable or column metadata</td>
+</tr>
+<tr class="even">
+<td>ItemGroupData</td>
+<td>actual row of values</td>
+</tr>
+<tr class="odd">
+<td>ItemData</td>
+<td>actual cell value</td>
+</tr>
+<tr class="even">
+<td>File</td>
+<td>actual filename</td>
+</tr>
+</tbody>
+</table>
+<p>So an ItemGroupOID might have a value of <code>IG.DM</code> for the SDTM <code>DM</code> domain (Demographics). And there will be a ItemOID of <code>IT.STUDYID</code> or <code>IT.USUBJID</code> in that item group. Those are columns that used in multiple domains. The DM domain might also have an ItemOID of <code>IT.DM.ETHNIC</code> which is specific to the DM domain.</p>
+<p>The reason that I bring this up is that some properties of the column definition are in <code>define.xml</code> as ItemRef(s) and some properties as ItemDef(s). <code>Mandatory</code> is part of the ItemRef. The dataset-json specification is only ItemDef data.</p>
+<p>The specification is written so that the OID columns are optional, but to fully validate data, there are some column attributes that are only in <code>define.xml</code>.</p>
+</section>
+<section id="column-attribute-issues" class="level2">
+<h2 class="anchored" data-anchor-id="column-attribute-issues">Column Attribute Issues</h2>
+<p>Looking at the column attributes, what is required are the basics</p>
+<ul>
+<li><code>itemOID</code> - the unique key of this column</li>
+<li><code>name</code> - the column name</li>
+<li><code>label</code> - the column label</li>
+<li><code>dataType</code> - the column type</li>
+</ul>
+<p>These all make sense - with dataType being an enum (see list above). Technically, there are many other dataTypes in the ODM XML model but in practice the main types are there.</p>
+<section id="targetdatatype" class="level3">
+<h3 class="anchored" data-anchor-id="targetdatatype">targetDataType</h3>
+<p>As for <code>targetDataType</code>, this came about as datetime, date, and time values in SAS are <strong>either</strong> strings or numeric values (with the 0-date being Jan 1, 19<strong>60</strong> and the 0-time being midnight). But the data in the JSON file is always a string, so this column attribute is telling the serialization software what the resulting in-memory data type should be. But R and python have various classes for datetime, date, and time values. Some of those do use a number representation for timestamps under the covers. But again, it seems we are using the specification to specify details of the internal data structure.</p>
+<p>This column attribute is also used for the <code>decimal</code> data type in a superfluous manner. It has to be added for string-representations of decimal values.</p>
+<p>If we really want to specify the language-specific data structure properties, then it might make more sense to have those under the top-level <code>sourceSystem</code> perhaps - or under language-specific top-level attributes.</p>
+</section>
+<section id="length" class="level3">
+<h3 class="anchored" data-anchor-id="length">length</h3>
+<p>Next we have <code>length</code>, which as mentioned above is problematic for Unicode strings based on normalization and grapheme clustering. The sense I get is that the value here is meant to be a <strong>capability</strong> (you have to handle strings at-least this long).</p>
+</section>
+<section id="displayformat" class="level3">
+<h3 class="anchored" data-anchor-id="displayformat">displayFormat</h3>
+<p>This is clearly a SAS only attribute to used to make sure original and resulting datasets are the “same”.</p>
+</section>
+<section id="keysequence" class="level3">
+<h3 class="anchored" data-anchor-id="keysequence">keySequence</h3>
+<p>The keySequence attribute can be used to create the SAS dataset key (hash) - so this is clearly for internal data structure. Technically in SAS, this can doesn’t have to be unique (eg. <code>MULTIDATA: 'Y'</code>). For R, <code>row.names</code> could be created from this but <code>row.names</code> must be unique.</p>
+<p>I’m not familiar enough with SAS to know if a component of a key implies it is required.</p>
+<p>I’d also add that SAS datasets can have multiple indices, so I’m not sure why, if we are specifying internal data structure we include the key and not the indices. My guess is that these are not part of ODM XML schema to which we are creating this specification from. It could be the ODM XML schema is a bit SAS-specific as well.</p>
+</section>
+<section id="what-is-not-here" class="level3">
+<h3 class="anchored" data-anchor-id="what-is-not-here">What is not here</h3>
+<p>As mentioned above, if I needed to specify more rules to validate a dataset, then I would need to know if the column values can be missing or not (required) or conditionally required.</p>
+<p>In addition, all those JSON schema properties start to apply - range on numeric values? enumerations? code-lists? string regex?</p>
+</section>
+</section>
+<section id="top-level-metadata-attribute-issues" class="level2">
+<h2 class="anchored" data-anchor-id="top-level-metadata-attribute-issues">Top-level Metadata Attribute Issues</h2>
+<p>Again, the required attributes for the dataset-json top-level metadata all make sense.</p>
+<ul>
+<li>name - the name of the dataset</li>
+<li>label - the label for the dataset</li>
+<li>columns - the column definitions (see above)</li>
+<li>records - the number of rows</li>
+<li>datasetJSONCreationDateTime - timestamp for dataset-json file creation</li>
+<li>datasetJSONVersion - the version (1.1 with optional third component)</li>
+<li>itemGroupOID - the OID for this dataset</li>
+</ul>
+<p>In general, it is a pet peeve of mine to allow datetime and time values without timezones but that is allowed here (as well as dealing with incomplete data) - all part of ISO 8601.</p>
+<p>And for style, I’d have used <code>rowCount</code> for <code>records</code> but given the context it makes total sense.</p>
+<section id="oids" class="level3">
+<h3 class="anchored" data-anchor-id="oids">OIDs</h3>
+<p>The <code>fileOID</code>, <code>studyOID</code>, <code>metaDataVersionOID</code> and <code>metaDataRef</code> attributes are all related to connecting this data to the <code>define.xml</code> catalog - technically optional but I’m not sure how to properly validate a dataset without it.</p>
+<p>In the end, <code>itemGroupOID</code> and <code>itemOID</code> are the only required OID values.</p>
+</section>
+<section id="dblastmodifieddatetime" class="level3">
+<h3 class="anchored" data-anchor-id="dblastmodifieddatetime">dbLastModifiedDateTime</h3>
+<p>The <code>dbLastModifiedDateTime</code> attribute is the last modified timestamp for the source of this JSON data.</p>
+<p>There is a jsontron type rule for this being earlier than the creation timestamp required attribute.</p>
+<p>Again as a style thing, I would have used “source” vs “db” - and perhaps made this part of the <code>sourceSystem</code> object. And it should have a timezone.</p>
+<p>The mention of “db” however, makes me wonder about creating a DuckDB extension to read and write dataset-json files (each file as a table and then include the catalog data as well).</p>
+</section>
+<section id="source-information" class="level3">
+<h3 class="anchored" data-anchor-id="source-information">Source information</h3>
+<p>The <code>originator</code>, <code>sourceSystem</code> (with <code>name</code> and <code>version</code>) are to be used to share the organization and “system” that generated this dataset-json file. It’s not clear to me if <code>sourceSystem</code> should be a package name, programming language, internal SCE name? I think more clarity on how this could be used is warranted. This could also be a place there SAS, R, python-specific data could be recorded.</p>
+</section>
+</section>
+<section id="extendability-issues" class="level2">
+<h2 class="anchored" data-anchor-id="extendability-issues">Extendability Issues</h2>
+<p>There is discussion of extendability to dataset-json - this uses a new <code>sourceSystem.systemExtensions</code> attribute but also seems to imply a custom JSON schema file. I do think JSON schema has built in schema extension capabilities and perhaps those could be looked at in the examples. Perhaps this is a place to extend the data to internal data structure details.</p>
+</section>
+<section id="next-article" class="level2">
+<h2 class="anchored" data-anchor-id="next-article">Next article</h2>
+<p>I hope this is useful and I am more than open to creating github issues / updates to the User Guide etc. Happy to receive feedback - my contact info is at <a href="https://www.learnthinkcode.com">my website</a>.</p>
+<p>In part 3, I’ll review the API and potential issues there.</p>
+
+
+</section>
+
+ ]]></description>
+  <category>pharmaverse</category>
+  <category>data</category>
+  <guid>https://brianrepko.github.io/blog/posts/2026-01-15-datasetjson-part2/</guid>
+  <pubDate>Thu, 15 Jan 2026 00:00:00 GMT</pubDate>
+  <media:content url="https://brianrepko.github.io/blog/posts/2026-01-15-datasetjson-part2/datasetjson.png" medium="image" type="image/png" height="72" width="144"/>
+</item>
 <item>
   <title>Dataset-JSON</title>
   <dc:creator>Brian Repko</dc:creator>
