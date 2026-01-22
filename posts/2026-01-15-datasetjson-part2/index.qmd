@@ -92,7 +92,7 @@ The dataset-json data types of `float` and `double` are intended to represent in
 It is basically saying what data type to use in the environment (SAS, R, python, etc.) that will import this data - or at least the *capability* of said environment (eg. R only has doubles - not floats).
 There are the well-known issues of converting values in 𝔻 to a base 2 binary format.
 
-Interestingly, there is no JSON schema format for dataset-json's "decimal" - again that is using a data type to specify the in-memory representation for this column (aka decimal stored as a string).
+Interestingly, there is no JSON schema format for dataset-json's "decimal" - again that is using a data type to specify the in-memory representation for this column (aka decimal value based on JSON string).
 
 In terms of character encoding for the file, later versions of JSON require UTF-8 encoding.
 The dataset-json User's Guide refers to optional usage of UTF-16 or UTF-32 but this is not allowed in [RFC8259](https://datatracker.ietf.org/doc/html/rfc8259).
@@ -121,7 +121,7 @@ At some point, I'm sure CDISC will have a number of workshops on "Internationali
 
 I think it's useful to also step back and share what the actual problem we are trying to solve here is.
 We will have, as part of the data and coding related to a clinical trial, "data frames".
-For SAS, these are datasets, for R, these are data.frame-s and for python, these are pandas.DataFrame-s (or polars?) and in SQL, these are tables.
+For SAS, these are datasets, for R, these are data.frame(s) and for python, these are pandas.DataFrame(s) (or polars?) and in SQL, these are tables.
 
 We have two main contexts - same-language serialization (export / import) and different-language serialization.
 In both these contexts, the ultimate question is - is the original in-memory data frame the same as the resulting in-memory data frame.
@@ -129,7 +129,7 @@ When we are in the same-language context (SAS → JSON → SAS), "sameness" of i
 When we are in the different-language context (R → JSON → SAS), "sameness" of the in-memory data frames does not have access to those deeper properties - internal data types used for the columns are in different programming languages and data frame classes have different properties - SAS datasets can have a "key" (hash), multiple indices, display formats etc. 
 R data.frames have row.names which SAS does not (similar to key but SAS keys don't _have to_ be unique).
 
-The reason that I bring this up is that some parts of the dataset-json specification are for the **SAS-specific same-language context**.
+The reason that I bring this up is that some parts of the dataset-json specification are only for the **SAS-specific same-language context**.
 
 I actually think that we might not care about a different-language context as clinical trial validation from the regulatory authority will be same-language. However, as clinical trial code becomes more polyglot - some SAS, some R, some python - then we might need to consider different-language contexts.
 
@@ -157,11 +157,11 @@ And there will be a ItemOID of `IT.STUDYID` or `IT.USUBJID` in that item group.
 Those are columns that used in multiple domains.
 The DM domain might also have an ItemOID of `IT.DM.ETHNIC` which is specific to the DM domain.
 
-The reason that I bring this up is that some properties of the column definition are in `define.xml` as ItemRef(s) and some properties as ItemDef(s).
+The reason that I bring this up is that some properties of the column definition are in `define.xml` as **ItemRef(s)** and some properties as **ItemDef(s)**.
 `Mandatory` is part of the ItemRef.
 The dataset-json specification is only ItemDef data.
 
-The specification is written so that the OID columns are optional, but to fully validate data, there are some column attributes that are only in `define.xml`.
+The specification is written so that the connection to the catalog is optional, but to fully validate data, there are some column attributes that are only in `define.xml`.
 
 ## Column Attribute Issues
 
@@ -195,12 +195,12 @@ The sense I get is that the value here is meant to be a __capability__ (you have
 
 ### displayFormat
 
-This is clearly a SAS only attribute to used to make sure original and resulting datasets are the "same".
+This is clearly a SAS only attribute to used to make sure original and resulting datasets look the "same".
 
 ### keySequence
 
 The keySequence attribute can be used to create the SAS dataset key (hash) - so this is clearly for internal data structure.
-Technically in SAS, this can doesn't have to be unique (eg. `MULTIDATA: 'Y'`).
+Technically in SAS, the key doesn't have to be unique (eg. `MULTIDATA: 'Y'`).
 For R, `row.names` could be created from this but `row.names` must be unique.
 
 I'm not familiar enough with SAS to know if a component of a key implies it is required.
@@ -219,13 +219,13 @@ In addition, all those JSON schema properties start to apply - range on numeric 
 
 Again, the required attributes for the dataset-json top-level metadata all make sense.
 
+- itemGroupOID - the key for this dataset
 - name - the name of the dataset
 - label - the label for the dataset
 - columns - the column definitions (see above)
 - records - the number of rows
 - datasetJSONCreationDateTime - timestamp for dataset-json file creation
 - datasetJSONVersion - the version (1.1 with optional third component)
-- itemGroupOID - the OID for this dataset
 
 In general, it is a pet peeve of mine to allow datetime and time values without timezones but that is allowed here (as well as dealing with incomplete data) - all part of ISO 8601.
 
