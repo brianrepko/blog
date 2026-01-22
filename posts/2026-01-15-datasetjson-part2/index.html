@@ -336,7 +336,7 @@ window.Quarto = {
 <p>For string-based data types, we have <code>minLength</code>, <code>maxLength</code>, <code>pattern</code>, and <code>format</code>. JSON schema has known formats for <code>date-time</code>, <code>date</code>, <code>time</code>, and <code>uri</code> (and <code>iri</code>) - but <strong>dataset-json does not use these</strong>. It makes use of <code>pattern</code> for validation of those string-based types. This may be the case that <code>pattern</code> is actually used when validating and <code>format</code> may not be. That is probably dependent on the validator software. You can find the full list of supported JSON schema formats <a href="https://json-schema.org/understanding-json-schema/reference/type#built-in-formats">here</a>.</p>
 <p>For numeric data, JSON schema separates integers (ℤ) from decimal (𝔻) data. Note that decimals (𝔻) is a subset of the rationals (ℚ) - given by <span class="math inline">\(a/10^n\)</span> (where <span class="math inline">\(a\)</span> and <span class="math inline">\(n\)</span> are in ℤ). Thus <span class="math inline">\(1/3\)</span> is in ℚ but not in 𝔻 (it repeats forever) and thus for some values we have to deal with both precision and rounding.</p>
 <p>The dataset-json data types of <code>float</code> and <code>double</code> are intended to represent in-memory IEEE 754 single- and double-precision constructs. It is basically saying what data type to use in the environment (SAS, R, python, etc.) that will import this data - or at least the <em>capability</em> of said environment (eg. R only has doubles - not floats). There are the well-known issues of converting values in 𝔻 to a base 2 binary format.</p>
-<p>Interestingly, there is no JSON schema format for dataset-json’s “decimal” - again that is using a data type to specify the in-memory representation for this column (aka decimal stored as a string).</p>
+<p>Interestingly, there is no JSON schema format for dataset-json’s “decimal” - again that is using a data type to specify the in-memory representation for this column (aka decimal value based on JSON string).</p>
 <p>In terms of character encoding for the file, later versions of JSON require UTF-8 encoding. The dataset-json User’s Guide refers to optional usage of UTF-16 or UTF-32 but this is not allowed in <a href="https://datatracker.ietf.org/doc/html/rfc8259">RFC8259</a>.</p>
 <p>Also, a general issue with JSON is that the Unicode escape - <code>\uXXXX</code> - only supports Unicode’s Basic Multilingual Plane (BMP) and not full Unicode. One needs to either embed the codepoints directly (UTF-8 supports all Unicode) or escape as surrogate pair.</p>
 <p>And then for moving from US-ASCII to Unicode…</p>
@@ -355,9 +355,9 @@ window.Quarto = {
 </section>
 <section id="our-problem-domain" class="level2">
 <h2 class="anchored" data-anchor-id="our-problem-domain">Our Problem Domain</h2>
-<p>I think it’s useful to also step back and share what the actual problem we are trying to solve here is. We will have, as part of the data and coding related to a clinical trial, “data frames”. For SAS, these are datasets, for R, these are data.frame-s and for python, these are pandas.DataFrame-s (or polars?) and in SQL, these are tables.</p>
+<p>I think it’s useful to also step back and share what the actual problem we are trying to solve here is. We will have, as part of the data and coding related to a clinical trial, “data frames”. For SAS, these are datasets, for R, these are data.frame(s) and for python, these are pandas.DataFrame(s) (or polars?) and in SQL, these are tables.</p>
 <p>We have two main contexts - same-language serialization (export / import) and different-language serialization. In both these contexts, the ultimate question is - is the original in-memory data frame the same as the resulting in-memory data frame. When we are in the same-language context (SAS → JSON → SAS), “sameness” of in-memory data frames can consider deeper properties of the internal data structure. When we are in the different-language context (R → JSON → SAS), “sameness” of the in-memory data frames does not have access to those deeper properties - internal data types used for the columns are in different programming languages and data frame classes have different properties - SAS datasets can have a “key” (hash), multiple indices, display formats etc. R data.frames have row.names which SAS does not (similar to key but SAS keys don’t <em>have to</em> be unique).</p>
-<p>The reason that I bring this up is that some parts of the dataset-json specification are for the <strong>SAS-specific same-language context</strong>.</p>
+<p>The reason that I bring this up is that some parts of the dataset-json specification are only for the <strong>SAS-specific same-language context</strong>.</p>
 <p>I actually think that we might not care about a different-language context as clinical trial validation from the regulatory authority will be same-language. However, as clinical trial code becomes more polyglot - some SAS, some R, some python - then we might need to consider different-language contexts.</p>
 </section>
 <section id="oids-and-the-model-beyond-a-data-frame" class="level2">
@@ -400,8 +400,8 @@ window.Quarto = {
 </tbody>
 </table>
 <p>So an ItemGroupOID might have a value of <code>IG.DM</code> for the SDTM <code>DM</code> domain (Demographics). And there will be a ItemOID of <code>IT.STUDYID</code> or <code>IT.USUBJID</code> in that item group. Those are columns that used in multiple domains. The DM domain might also have an ItemOID of <code>IT.DM.ETHNIC</code> which is specific to the DM domain.</p>
-<p>The reason that I bring this up is that some properties of the column definition are in <code>define.xml</code> as ItemRef(s) and some properties as ItemDef(s). <code>Mandatory</code> is part of the ItemRef. The dataset-json specification is only ItemDef data.</p>
-<p>The specification is written so that the OID columns are optional, but to fully validate data, there are some column attributes that are only in <code>define.xml</code>.</p>
+<p>The reason that I bring this up is that some properties of the column definition are in <code>define.xml</code> as <strong>ItemRef(s)</strong> and some properties as <strong>ItemDef(s)</strong>. <code>Mandatory</code> is part of the ItemRef. The dataset-json specification is only ItemDef data.</p>
+<p>The specification is written so that the connection to the catalog is optional, but to fully validate data, there are some column attributes that are only in <code>define.xml</code>.</p>
 </section>
 <section id="column-attribute-issues" class="level2">
 <h2 class="anchored" data-anchor-id="column-attribute-issues">Column Attribute Issues</h2>
@@ -425,11 +425,11 @@ window.Quarto = {
 </section>
 <section id="displayformat" class="level3">
 <h3 class="anchored" data-anchor-id="displayformat">displayFormat</h3>
-<p>This is clearly a SAS only attribute to used to make sure original and resulting datasets are the “same”.</p>
+<p>This is clearly a SAS only attribute to used to make sure original and resulting datasets look the “same”.</p>
 </section>
 <section id="keysequence" class="level3">
 <h3 class="anchored" data-anchor-id="keysequence">keySequence</h3>
-<p>The keySequence attribute can be used to create the SAS dataset key (hash) - so this is clearly for internal data structure. Technically in SAS, this can doesn’t have to be unique (eg. <code>MULTIDATA: 'Y'</code>). For R, <code>row.names</code> could be created from this but <code>row.names</code> must be unique.</p>
+<p>The keySequence attribute can be used to create the SAS dataset key (hash) - so this is clearly for internal data structure. Technically in SAS, the key doesn’t have to be unique (eg. <code>MULTIDATA: 'Y'</code>). For R, <code>row.names</code> could be created from this but <code>row.names</code> must be unique.</p>
 <p>I’m not familiar enough with SAS to know if a component of a key implies it is required.</p>
 <p>I’d also add that SAS datasets can have multiple indices, so I’m not sure why, if we are specifying internal data structure we include the key and not the indices. My guess is that these are not part of ODM XML schema to which we are creating this specification from. It could be the ODM XML schema is a bit SAS-specific as well.</p>
 </section>
@@ -443,13 +443,13 @@ window.Quarto = {
 <h2 class="anchored" data-anchor-id="top-level-metadata-attribute-issues">Top-level Metadata Attribute Issues</h2>
 <p>Again, the required attributes for the dataset-json top-level metadata all make sense.</p>
 <ul>
+<li>itemGroupOID - the key for this dataset</li>
 <li>name - the name of the dataset</li>
 <li>label - the label for the dataset</li>
 <li>columns - the column definitions (see above)</li>
 <li>records - the number of rows</li>
 <li>datasetJSONCreationDateTime - timestamp for dataset-json file creation</li>
 <li>datasetJSONVersion - the version (1.1 with optional third component)</li>
-<li>itemGroupOID - the OID for this dataset</li>
 </ul>
 <p>In general, it is a pet peeve of mine to allow datetime and time values without timezones but that is allowed here (as well as dealing with incomplete data) - all part of ISO 8601.</p>
 <p>And for style, I’d have used <code>rowCount</code> for <code>records</code> but given the context it makes total sense.</p>
