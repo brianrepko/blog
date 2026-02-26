@@ -2,6 +2,7 @@
   {
     "listing": "/index.html",
     "items": [
+      "/posts/2026-02-26-edgepython-and-ai/index.html",
       "/posts/2026-01-15-datasetjson-part2/index.html",
       "/posts/2025-12-31-datasetjson-part1/index.html",
       "/posts/2025-12-20-tiledb-snowflake/index.html",
@@ -17,10 +18,10 @@
       "/posts/2010-02-19-making-ant-1-8-work-like-maven-not-so-much/index.html",
       "/posts/2010-01-27-connecting-agile-teams-one-pink-post-it-at-a-time/index.html",
       "/posts/2010-01-27-scrum-and-kanban-together/index.html",
-      "/posts/2010-01-25-when-is-a-story-prepared/index.html",
       "/posts/2010-01-25-what-is-software-architecture/index.html",
+      "/posts/2010-01-25-discovering-software-architecture/index.html",
       "/posts/2010-01-25-qa-versus-qc/index.html",
-      "/posts/2010-01-25-discovering-software-architecture/index.html"
+      "/posts/2010-01-25-when-is-a-story-prepared/index.html"
     ]
   }
 ]

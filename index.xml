@@ -10,7 +10,72 @@
 <atom:link href="https://brianrepko.github.io/blog/index.xml" rel="self" type="application/rss+xml"/>
 <description>Brian Repko&#39;s blog</description>
 <generator>quarto-1.8.27</generator>
-<lastBuildDate>Thu, 15 Jan 2026 00:00:00 GMT</lastBuildDate>
+<lastBuildDate>Thu, 26 Feb 2026 00:00:00 GMT</lastBuildDate>
+<item>
+  <title>edgePython and other AI thoughts</title>
+  <dc:creator>Brian Repko</dc:creator>
+  <link>https://brianrepko.github.io/blog/posts/2026-02-26-edgepython-and-ai/</link>
+  <description><![CDATA[ 
+
+
+
+
+
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>I am an “AI” luddite
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Much like my father retired just before the advent of personal computers, I retired just before the advent of good GenAI tooling. So I haven’t used it ever - though I’ve made use of transformer models (biological data transformation) and am familiar with data science (as it was my career for 15 years) and software engineering (my whole career).</p>
+</div>
+</div>
+<section id="thoughts-of-ai-dancing-in-my-head" class="level2">
+<h2 class="anchored" data-anchor-id="thoughts-of-ai-dancing-in-my-head">Thoughts of “AI” dancing in my head</h2>
+<p>This last week I received a link to the <a href="https://shumer.dev/something-big-is-happening">Matt Shumer viral post</a>. I also found some posts that were critical of it - my favorite is <a href="https://medium.com/ai-software-engineer/i-took-matt-shumer-ai-article-with-a-grain-of-salt-here-are-my-reasons-d553a6b1b9e2">here</a> - much of which I agree with. Code, as a subset of text, is so formalized that it makes sense to me that the generation of code will be a sweet spot for generative “AI” tools. This isn’t new - these tools existed prior to making use of LLMs for them. After all, for the youngins, <a href="https://en.wikipedia.org/wiki/Model-driven_architecture">model-driven architecture</a> was a thing 25 years ago.</p>
+<p>But with the “AI is amazing” blog dancing in my head - I got hit by <code>{edgePython}</code>.</p>
+</section>
+<section id="edgepython" class="level2">
+<h2 class="anchored" data-anchor-id="edgepython">edgePython</h2>
+<p>Within bioinformatics, the <a href="https://bioconductor.org/packages/release/bioc/html/edgeR.html"><code>{edgeR}</code> package</a> is one of the main packages used for differential expression analysis. It is an R package that is part of the <a href="https://bioconductor.org">BioConductor</a> ecosystem - a large collection of R packages for bioinformatics. BioConductor is one of main reasons that bioinformaticians and computational biologists learn R. There is an ever-ongoing language discussion - R vs Python - that exists in this space and BioC is a <em>HUGE</em> plus on the R side of the scale. (It’s not a scale - you should learn both).</p>
+<p>So last week, Lior Pachter posted <a href="https://liorpachter.wordpress.com/2026/02/19/the-quickening/">The Quickening</a> about his work creating a re-implementation or port of <code>{edgeR}</code> from R (and C) to Python - called <code>{edgePython}</code>. You can find links to the <a href="https://github.com/pachterlab/edgePython">code</a> as well as a <a href="https://www.biorxiv.org/content/10.64898/2026.02.16.706223v2">preprint about the work</a> in the blog. In particular, for me, the ability to work with AnnData files and proper kallisto support was like - DAMN! - this is amazing.</p>
+<p>In the end, I started wondering if all of BioConductor could be ported to Python - or perhaps Julia or Rust for pure language implementations that also cover the optimized parts written in C, C++, or Fortran.</p>
+<p>And then I wondered about who would own it…</p>
+</section>
+<section id="open-source-copyright-and-licensing" class="level2">
+<h2 class="anchored" data-anchor-id="open-source-copyright-and-licensing">Open Source Copyright and Licensing</h2>
+<p>When you write code, you own the copyright to it. Most coders work for someone and part of their employee agreements is that you give up that copyright to your employer. For open source projects, they all have (or SHOULD HAVE) a license - which delineates what others can do with the code - but copyright is still owned by the authors. Some open source projects have contributor agreements that also make it that you give up copyright to the project. Where this comes into play is that <strong>in order to change the license, all the copyright owners need to agree to the change</strong>.</p>
+<p>So - <code>{edgeR}</code> - has a GPL v2 (or higher) license - and <code>{edgePython}</code>, as a port, is a derivative work of <code>{edgeR}</code>. But if <code>{edgePython}</code> was generated with a GenAI tool (in this case it was both Claude and Codex), my understanding is that there is no new copyright holder. The <code>{edgeR}</code> copyright owners are still the copyright owners of <code>{edgePython}</code> - technically for method signatures - but not for any of the actual code.</p>
+<p>The license for <code>{edgePython}</code> was chosen to be GPL v3 - which is allowed on a derivative work with a GPL v2 (or higher) license. In my experience, Lior Pachtor always gets it correct, but I think it will be an interesting scenario - one that will happen often - for copyright lawyers to work through.</p>
+<p>And as coincidence would have it, rOpenSci just posted on their take of the use of GenAI tools with their packages.</p>
+</section>
+<section id="scientific-open-source-groups-are-on-it" class="level2">
+<h2 class="anchored" data-anchor-id="scientific-open-source-groups-are-on-it">Scientific Open Source groups are on it</h2>
+<p>Today, rOpenSci, blogged about their <a href="https://ropensci.org/blog/2026/02/26/ropensci-ai-policy/">draft “AI” policy</a>. In it, they reference both the policies from the <a href="https://blog.joss.theoj.org/2026/01/preparing-joss-for-a-generative-ai-future">Journal of Open Source Software</a> as well as <a href="https://www.pyopensci.org/blog/generative-ai-peer-review-policy.html">pyOpenSci</a>.</p>
+<p>These guides do make suggestions about what to document around the use of the GenAI tooling. To his credit, the <code>README.md</code> file of <code>{edgePython}</code> has all of that (with the preprint doing the heavy lifting). Again, Lior Pachter always gets it correct.</p>
+<p>The pyOpenSci policy discusses one scenario that I’d not thought about. There will be issues with understanding what code that went into training these models, not knowing what the license is for that training data, and if the code generated might be in violation of the license from the code in the training data (example, missing attribution).</p>
+<p>As much as I love the idea of porting bioinformatics code from one language to another - I’m not sure how to get around this scenario that pyOpenSci highlights. They, and rOpenSci, are correctly pushing this type of review onto the contributors but I’m not sure that tooling exists for finding all the license requirements of the input code related to your output code (when it is the same).</p>
+</section>
+<section id="teamwork-makes-the-dream-work" class="level2">
+<h2 class="anchored" data-anchor-id="teamwork-makes-the-dream-work">Teamwork makes the dream work</h2>
+<p>In the <code>{edgePython}</code> blog post, one of the comments made about <code>{edgeR}</code> is that it is a complex code base maintained and improved over 16 years. What would be interesting to me, is not only how to make the port to Python but could the tools also create a description or documentation of the new package. There isn’t anything in the <code>docs</code> folder of <code>{edgePython}</code> - an <code>api.yaml</code> file that I’m not sure the usage of. I’m particular to the <a href="https://en.wikipedia.org/wiki/4%2B1_architectural_view_model">4+1 model</a> of describing software - it would be amazing to see if tools can generate that.</p>
+<p>Documentation is important for team work - how do we talk about the system and the code (and the product) that we are making. Having that model in your head is key to high performing software teams. Many of the “AI is awesome” work is done by teams-of-<strong>1</strong>. I struggle with the parts of software engineering that are needed for teams-of-n. I think that that is what JOSS, pyOpenSci, and rOpenSci are starting to discuss - particular to code review. Code review is essentially a part of - <em>does this change require an update to the model we all have in our heads</em>? and how best to make that happen?</p>
+<p>And that was my additional criticism of the “Something Big is Happening” post. It is - these tools are getting better at code generation - but that is only a part of the process and skill of product / software development.</p>
+
+
+</section>
+
+ ]]></description>
+  <category>bioinformatics</category>
+  <category>ai</category>
+  <guid>https://brianrepko.github.io/blog/posts/2026-02-26-edgepython-and-ai/</guid>
+  <pubDate>Thu, 26 Feb 2026 00:00:00 GMT</pubDate>
+  <media:content url="https://brianrepko.github.io/blog/posts/2026-02-26-edgepython-and-ai/ai.png" medium="image" type="image/png" height="74" width="144"/>
+</item>
 <item>
   <title>Dataset-JSON</title>
   <dc:creator>Brian Repko</dc:creator>
@@ -1095,36 +1160,6 @@ font-style: inherit;">();</span></span></code></pre></div></div>
   <media:content url="https://brianrepko.github.io/blog/posts/2010-01-27-scrum-and-kanban-together/blog-kanban-scrum.jpg" medium="image" type="image/jpeg"/>
 </item>
 <item>
-  <title>When is a story prepared?</title>
-  <dc:creator>Brian Repko</dc:creator>
-  <link>https://brianrepko.github.io/blog/posts/2010-01-25-when-is-a-story-prepared/</link>
-  <description><![CDATA[ 
-
-
-
-
-
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="https://brianrepko.github.io/blog/posts/2010-01-25-when-is-a-story-prepared/blog-circles.jpg" class="quarto-figure quarto-figure-center figure-img" height="400"></p>
-</figure>
-</div>
-<p>This is another drawing that I use a lot while coaching agile projects and actually is part of multiple discussions around agile methods. Most agile methods talk about stories being created by the customer and put on a backlog. For some iteration, at iteration planning, the story gets explained to developers and testers. They work on the story until it is complete. And we have lots of conversations, as agile coaches and teams, about “when is a story complete”.</p>
-<p>This misses a lot of the work that needs to be done in order to make teams effective. I like to have regular backlog grooming meetings with part of the team and ask the question - <em><strong>is this story prepared?</strong></em>. <em><strong>What is needed in order to bring this story to iteration planning?</strong></em> That needed work might involve QA (quality assurance) for acceptance tests or functional tests. That might involve UX (user experience) for wireframes or drawings. That might involve some TA (technical architecture) work or IA (information architecture, or domain modeling) work depending on the story. It might require a BA to work out the business value of this story or how to break it up into what needs to done now versus later (breaking up stories into smaller, potentially optional pieces). Its only when a story is prepared that it should be brought to iteration planning.</p>
-<p>I also use this picture to help explain why some work is “on the board” for the iteration (meaning we are tracking velocity and burndown charts - its the developer/tester circle) vs work that needs to get done but we aren’t measuring velocity for it. The first is working towards completing the story. The latter is working towards getting the story prepared.</p>
-<p>It also helps explain the roles of the non-customer, non-developer and non-tester folks…though I’m pretty careful to explain that that 2nd circle is optional work (story by story) and that that work can be done by anyone with those skills. Its really about what would make the communication of this story effective and doing that in as lightweight of a fashion as you need.</p>
-<p>The last part of this drawing is that the story doesn’t stop because development is done. Its really done when its deployed (some would say deployed to production) and supported. This means that the story needs to be shared with operations and support teams. I’ve seen this done as part of a release process and actually made it the responsibility of the whole team to figure how to to communicate the stories that are being released. Really each circle needs to figure out when its done with the story and how to communicate to the next circle (and then there are feedback loops!).</p>
-<p>Its really about effective communication and community. I didn’t get this last part until attending a session with <a href="https://nonodename.com/post/davidhussman/">David Hussman</a> who talks about building community around a story.</p>
-
-
-
- ]]></description>
-  <category>agile</category>
-  <guid>https://brianrepko.github.io/blog/posts/2010-01-25-when-is-a-story-prepared/</guid>
-  <pubDate>Mon, 25 Jan 2010 00:00:00 GMT</pubDate>
-  <media:content url="https://brianrepko.github.io/blog/posts/2010-01-25-when-is-a-story-prepared/blog-circles.jpg" medium="image" type="image/jpeg"/>
-</item>
-<item>
   <title>What is software architecture?</title>
   <dc:creator>Brian Repko</dc:creator>
   <link>https://brianrepko.github.io/blog/posts/2010-01-25-what-is-software-architecture/</link>
@@ -1146,28 +1181,6 @@ font-style: inherit;">();</span></span></code></pre></div></div>
   <guid>https://brianrepko.github.io/blog/posts/2010-01-25-what-is-software-architecture/</guid>
   <pubDate>Mon, 25 Jan 2010 00:00:00 GMT</pubDate>
   <media:content url="https://brianrepko.github.io/blog/posts/2010-01-25-what-is-software-architecture/teaching.gif" medium="image" type="image/gif"/>
-</item>
-<item>
-  <title>QA versus QC</title>
-  <dc:creator>Brian Repko</dc:creator>
-  <link>https://brianrepko.github.io/blog/posts/2010-01-25-qa-versus-qc/</link>
-  <description><![CDATA[ 
-
-
-
-
-
-<p>For Agile projects, I often coach about the need for a QA (quality assurance) role in addition to just testers (or QC / quality control).</p>
-<p>For me, QA answers the question <strong>“are we doing the right job?”</strong> and QC answers the question <strong>“are we doing the job right?”</strong>.</p>
-<p>I see QA working with the Customer/Product Owner on coverage for acceptance and functional testing. A great QA person will be able to answer the architecture (“how do I - ?”) questions for the QC team as well as, like a great Business Analyst, be able to hold the domain model in their head. Could even be the same head (BA/QA)…</p>
-
-
-
- ]]></description>
-  <category>agile</category>
-  <guid>https://brianrepko.github.io/blog/posts/2010-01-25-qa-versus-qc/</guid>
-  <pubDate>Mon, 25 Jan 2010 00:00:00 GMT</pubDate>
-  <media:content url="https://brianrepko.github.io/blog/posts/2010-01-25-qa-versus-qc/checkbox.jpg" medium="image" type="image/jpeg"/>
 </item>
 <item>
   <title>Discovering software architecture</title>
@@ -1198,6 +1211,58 @@ font-style: inherit;">();</span></span></code></pre></div></div>
   <guid>https://brianrepko.github.io/blog/posts/2010-01-25-discovering-software-architecture/</guid>
   <pubDate>Mon, 25 Jan 2010 00:00:00 GMT</pubDate>
   <media:content url="https://brianrepko.github.io/blog/posts/2010-01-25-discovering-software-architecture/blog-arch-func.jpg" medium="image" type="image/jpeg"/>
+</item>
+<item>
+  <title>QA versus QC</title>
+  <dc:creator>Brian Repko</dc:creator>
+  <link>https://brianrepko.github.io/blog/posts/2010-01-25-qa-versus-qc/</link>
+  <description><![CDATA[ 
+
+
+
+
+
+<p>For Agile projects, I often coach about the need for a QA (quality assurance) role in addition to just testers (or QC / quality control).</p>
+<p>For me, QA answers the question <strong>“are we doing the right job?”</strong> and QC answers the question <strong>“are we doing the job right?”</strong>.</p>
+<p>I see QA working with the Customer/Product Owner on coverage for acceptance and functional testing. A great QA person will be able to answer the architecture (“how do I - ?”) questions for the QC team as well as, like a great Business Analyst, be able to hold the domain model in their head. Could even be the same head (BA/QA)…</p>
+
+
+
+ ]]></description>
+  <category>agile</category>
+  <guid>https://brianrepko.github.io/blog/posts/2010-01-25-qa-versus-qc/</guid>
+  <pubDate>Mon, 25 Jan 2010 00:00:00 GMT</pubDate>
+  <media:content url="https://brianrepko.github.io/blog/posts/2010-01-25-qa-versus-qc/checkbox.jpg" medium="image" type="image/jpeg"/>
+</item>
+<item>
+  <title>When is a story prepared?</title>
+  <dc:creator>Brian Repko</dc:creator>
+  <link>https://brianrepko.github.io/blog/posts/2010-01-25-when-is-a-story-prepared/</link>
+  <description><![CDATA[ 
+
+
+
+
+
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://brianrepko.github.io/blog/posts/2010-01-25-when-is-a-story-prepared/blog-circles.jpg" class="quarto-figure quarto-figure-center figure-img" height="400"></p>
+</figure>
+</div>
+<p>This is another drawing that I use a lot while coaching agile projects and actually is part of multiple discussions around agile methods. Most agile methods talk about stories being created by the customer and put on a backlog. For some iteration, at iteration planning, the story gets explained to developers and testers. They work on the story until it is complete. And we have lots of conversations, as agile coaches and teams, about “when is a story complete”.</p>
+<p>This misses a lot of the work that needs to be done in order to make teams effective. I like to have regular backlog grooming meetings with part of the team and ask the question - <em><strong>is this story prepared?</strong></em>. <em><strong>What is needed in order to bring this story to iteration planning?</strong></em> That needed work might involve QA (quality assurance) for acceptance tests or functional tests. That might involve UX (user experience) for wireframes or drawings. That might involve some TA (technical architecture) work or IA (information architecture, or domain modeling) work depending on the story. It might require a BA to work out the business value of this story or how to break it up into what needs to done now versus later (breaking up stories into smaller, potentially optional pieces). Its only when a story is prepared that it should be brought to iteration planning.</p>
+<p>I also use this picture to help explain why some work is “on the board” for the iteration (meaning we are tracking velocity and burndown charts - its the developer/tester circle) vs work that needs to get done but we aren’t measuring velocity for it. The first is working towards completing the story. The latter is working towards getting the story prepared.</p>
+<p>It also helps explain the roles of the non-customer, non-developer and non-tester folks…though I’m pretty careful to explain that that 2nd circle is optional work (story by story) and that that work can be done by anyone with those skills. Its really about what would make the communication of this story effective and doing that in as lightweight of a fashion as you need.</p>
+<p>The last part of this drawing is that the story doesn’t stop because development is done. Its really done when its deployed (some would say deployed to production) and supported. This means that the story needs to be shared with operations and support teams. I’ve seen this done as part of a release process and actually made it the responsibility of the whole team to figure how to to communicate the stories that are being released. Really each circle needs to figure out when its done with the story and how to communicate to the next circle (and then there are feedback loops!).</p>
+<p>Its really about effective communication and community. I didn’t get this last part until attending a session with <a href="https://nonodename.com/post/davidhussman/">David Hussman</a> who talks about building community around a story.</p>
+
+
+
+ ]]></description>
+  <category>agile</category>
+  <guid>https://brianrepko.github.io/blog/posts/2010-01-25-when-is-a-story-prepared/</guid>
+  <pubDate>Mon, 25 Jan 2010 00:00:00 GMT</pubDate>
+  <media:content url="https://brianrepko.github.io/blog/posts/2010-01-25-when-is-a-story-prepared/blog-circles.jpg" medium="image" type="image/jpeg"/>
 </item>
 </channel>
 </rss>
