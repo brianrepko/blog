@@ -1,0 +1,91 @@
+---
+title: "edgePython and other AI thoughts"
+description: "or Lior Pachter always gets it correct"
+image: ai.png
+date: 2026-02-26
+categories: 
+  - "bioinformatics"
+  - "ai"
+---
+
+::: callout-note
+## I am an "AI" luddite
+
+Much like my father retired just before the advent of personal computers, I retired just before the advent of good GenAI tooling.
+So I haven't used it ever - though I've made use of transformer models (biological data transformation) and am familiar with data science (as it was my career for 15 years) and software engineering (my whole career).
+:::
+
+## Thoughts of "AI" dancing in my head
+
+This last week I received a link to the [Matt Shumer viral post](https://shumer.dev/something-big-is-happening).
+I also found some posts that were critical of it - my favorite is [here](https://medium.com/ai-software-engineer/i-took-matt-shumer-ai-article-with-a-grain-of-salt-here-are-my-reasons-d553a6b1b9e2) - much of which I agree with.
+Code, as a subset of text, is so formalized that it makes sense to me that the generation of code will be a sweet spot for generative "AI" tools.
+This isn't new - these tools existed prior to making use of LLMs for them.
+After all, for the youngins, [model-driven architecture](https://en.wikipedia.org/wiki/Model-driven_architecture) was a thing 25 years ago.
+
+But with the "AI is amazing" blog dancing in my head - I got hit by `{edgePython}`.
+
+## edgePython
+
+Within bioinformatics, the [`{edgeR}` package](https://bioconductor.org/packages/release/bioc/html/edgeR.html) is one of the main packages used for differential expression analysis.
+It is an R package that is part of the [BioConductor](https://bioconductor.org) ecosystem - a large collection of R packages for bioinformatics.
+BioConductor is one of main reasons that bioinformaticians and computational biologists learn R.
+There is an ever-ongoing language discussion - R vs Python - that exists in this space and BioC is a *HUGE* plus on the R side of the scale.
+(It's not a scale - you should learn both).
+
+So last week, Lior Pachter posted [The Quickening](https://liorpachter.wordpress.com/2026/02/19/the-quickening/) about his work creating a re-implementation or port of `{edgeR}` from R (and C) to Python - called `{edgePython}`.
+You can find links to the [code](https://github.com/pachterlab/edgePython) as well as a [preprint about the work](https://www.biorxiv.org/content/10.64898/2026.02.16.706223v2) in the blog.
+In particular, for me, the ability to work with AnnData files and proper kallisto support was like - DAMN! - this is amazing.
+
+In the end, I started wondering if all of BioConductor could be ported to Python - or perhaps Julia or Rust for pure language implementations that also cover the optimized parts written in C, C++, or Fortran.
+
+And then I wondered about who would own it...
+
+## Open Source Copyright and Licensing
+
+When you write code, you own the copyright to it.
+Most coders work for someone and part of their employee agreements is that you give up that copyright to your employer.
+For open source projects, they all have (or SHOULD HAVE) a license - which delineates what others can do with the code - but copyright is still owned by the authors.
+Some open source projects have contributor agreements that also make it that you give up copyright to the project.
+Where this comes into play is that **in order to change the license, all the copyright owners need to agree to the change**.
+
+So - `{edgeR}` - has a GPL v2 (or higher) license - and `{edgePython}`, as a port, is a derivative work of `{edgeR}`.
+But if `{edgePython}` was generated with a GenAI tool (in this case it was both Claude and Codex), my understanding is that there is no new copyright holder.
+The `{edgeR}` copyright owners are still the copyright owners of `{edgePython}` - technically for method signatures - but not for any of the actual code.
+
+The license for `{edgePython}` was chosen to be GPL v3 - which is allowed on a derivative work with a GPL v2 (or higher) license.
+In my experience, Lior Pachtor always gets it correct, but I think it will be an interesting scenario - one that will happen often - for copyright lawyers to work through.
+
+And as coincidence would have it, rOpenSci just posted on their take of the use of GenAI tools with their packages.
+
+## Scientific Open Source groups are on it
+
+Today, rOpenSci, blogged about their [draft "AI" policy](https://ropensci.org/blog/2026/02/26/ropensci-ai-policy/).
+In it, they reference both the policies from the [Journal of Open Source Software](https://blog.joss.theoj.org/2026/01/preparing-joss-for-a-generative-ai-future) as well as [pyOpenSci](https://www.pyopensci.org/blog/generative-ai-peer-review-policy.html).
+
+These guides do make suggestions about what to document around the use of the GenAI tooling.
+To his credit, the `README.md` file of `{edgePython}` has all of that (with the preprint doing the heavy lifting).
+Again, Lior Pachter always gets it correct.
+
+The pyOpenSci policy discusses one scenario that I'd not thought about.
+There will be issues with understanding what code that went into training these models, not knowing what the license is for that training data, and if the code generated might be in violation of the license from the code in the training data (example, missing attribution).
+
+As much as I love the idea of porting bioinformatics code from one language to another - I'm not sure how to get around this scenario that pyOpenSci highlights.
+They, and rOpenSci, are correctly pushing this type of review onto the contributors but I'm not sure that tooling exists for finding all the license requirements of the input code related to your output code (when it is the same).
+
+## Teamwork makes the dream work
+
+In the `{edgePython}` blog post, one of the comments made about `{edgeR}` is that it is a complex code base maintained and improved over 16 years.
+What would be interesting to me, is not only how to make the port to Python but could the tools also create a description or documentation of the new package.
+There isn't anything in the `docs` folder of `{edgePython}` - an `api.yaml` file that I'm not sure the usage of.
+I'm particular to the [4+1 model](https://en.wikipedia.org/wiki/4%2B1_architectural_view_model) of describing software - it would be amazing to see if tools can generate that.
+
+Documentation is important for team work - how do we talk about the system and the code (and the product) that we are making.
+Having that model in your head is key to high performing software teams.
+Many of the "AI is awesome" work is done by teams-of-**1**.
+I struggle with the parts of software engineering that are needed for teams-of-n.
+I think that that is what JOSS, pyOpenSci, and rOpenSci are starting to discuss - particular to code review.
+Code review is essentially a part of - *does this change require an update to the model we all have in our heads*? and how best to make that happen?
+
+And that was my additional criticism of the "Something Big is Happening" post.
+It is - these tools are getting better at code generation - but that is only a part of the process and skill of product / software development.
