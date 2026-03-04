@@ -51,7 +51,7 @@ Where this comes into play is that **in order to change the license, all the cop
 
 So - `{edgeR}` - has a GPL v2 (or higher) license - and `{edgePython}`, as a port, is a derivative work of `{edgeR}`.
 But if `{edgePython}` was generated with a GenAI tool (in this case it was both Claude and Codex), my understanding is that there is no new copyright holder.
-The `{edgeR}` copyright owners are still the copyright owners of `{edgePython}` - technically for method signatures - but not for any of the actual code.
+The `{edgeR}` copyright owners are still the copyright owners of `{edgePython}` - technically for method signatures (?) - but not for any of the actual code.
 
 The license for `{edgePython}` was chosen to be GPL v3 - which is allowed on a derivative work with a GPL v2 (or higher) license.
 In my experience, Lior Pachtor always gets it correct, but I think it will be an interesting scenario - one that will happen often - for copyright lawyers to work through.
@@ -70,22 +70,22 @@ Again, Lior Pachter always gets it correct.
 The pyOpenSci policy discusses one scenario that I'd not thought about.
 There will be issues with understanding what code that went into training these models, not knowing what the license is for that training data, and if the code generated might be in violation of the license from the code in the training data (example, missing attribution).
 
-As much as I love the idea of porting bioinformatics code from one language to another - I'm not sure how to get around this scenario that pyOpenSci highlights.
+As much as I love the idea of porting bioinformatics code from one language to another - I'm not sure how to get around the scenario that pyOpenSci highlights.
 They, and rOpenSci, are correctly pushing this type of review onto the contributors but I'm not sure that tooling exists for finding all the license requirements of the input code related to your output code (when it is the same).
 
 ## Teamwork makes the dream work
 
 In the `{edgePython}` blog post, one of the comments made about `{edgeR}` is that it is a complex code base maintained and improved over 16 years.
 What would be interesting to me, is not only how to make the port to Python but could the tools also create a description or documentation of the new package.
-There isn't anything in the `docs` folder of `{edgePython}` - an `api.yaml` file that I'm not sure the usage of.
+There isn't anything in the `docs` folder of `{edgePython}` - just an `api.yaml` file that I'm not sure the usage of.
 I'm particular to the [4+1 model](https://en.wikipedia.org/wiki/4%2B1_architectural_view_model) of describing software - it would be amazing to see if tools can generate that.
 
 Documentation is important for team work - how do we talk about the system and the code (and the product) that we are making.
 Having that model in your head is key to high performing software teams.
-Many of the "AI is awesome" work is done by teams-of-**1**.
-I struggle with the parts of software engineering that are needed for teams-of-n.
-I think that that is what JOSS, pyOpenSci, and rOpenSci are starting to discuss - particular to code review.
-Code review is essentially a part of - *does this change require an update to the model we all have in our heads*? and how best to make that happen?
+Many of the "AI is awesome" work is done by **teams-of-1**.
+I struggle with the parts of software engineering that are needed for **teams-of-n**.
+I think that is what JOSS, pyOpenSci, and rOpenSci are starting to discuss - particular to code review.
+Code review is essentially a part of - *does this change require an update to the model we all have in our heads? and how best to make that happen?*
 
 And that was my additional criticism of the "Something Big is Happening" post.
-It is - these tools are getting better at code generation - but that is only a part of the process and skill of product / software development.
+There is increasing value in these tools - they are getting better at code generation - but that is only a part of the process and skill of product / software development.
