@@ -10,7 +10,690 @@
 <atom:link href="https://brianrepko.github.io/blog/index.xml" rel="self" type="application/rss+xml"/>
 <description>Brian Repko&#39;s blog</description>
 <generator>quarto-1.8.27</generator>
-<lastBuildDate>Thu, 26 Feb 2026 00:00:00 GMT</lastBuildDate>
+<lastBuildDate>Wed, 11 Mar 2026 00:00:00 GMT</lastBuildDate>
+<item>
+  <title>Dataset-JSON</title>
+  <dc:creator>Brian Repko</dc:creator>
+  <link>https://brianrepko.github.io/blog/posts/2026-03-11-datasetjson-part3/</link>
+  <description><![CDATA[ 
+
+
+
+
+
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Series
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>This is part 3 of a 3 part series on dataset-json.</p>
+<p>You can find part 1 <a href="https://brianrepko.github.io/blog/posts/2025-12-31-datasetjson-part1/" target="_blank">here</a> for an overview of dataset-json. You can find part 2 <a href="https://brianrepko.github.io/blog/posts/2026-01-15-datasetjson-part2/" target="_blank">here</a> for a list of concerns / issues with the dataset-json specification.</p>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>CDISC workshop
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>There is a planned Dataset-JSON Hands-On Implementation workshop on 18 May 2026 from 0900-1300 CET at the 2026 CDISC Europe Interchange conference in Milan. See <a href="https://www.cdisc.org/events/interchange/2026-cdisc-europe-interchange">the main website</a> or <a href="https://web.cvent.com/event/b32aaba1-214b-486e-8b5a-fdc8342f9794/websitePage:645d57e4-75eb-4769-b2c0-f201a0bfc6ce">here</a> for details.</p>
+</div>
+</div>
+<section id="overview" class="level2">
+<h2 class="anchored" data-anchor-id="overview">Overview</h2>
+<p>As we saw in Part 1, Dataset-JSON includes multiple deliverables and one of those is a REST API. The intention for this deliverable is that, in addition to file transfer, we can also do data transfer via APIs. These types of transfers could be between sponsors and EDCs or sponsors and CROs - really many different ideas here and I’m glad CDISC is doing this forward-thinking. This kind of data transfer is similar to other specifications in the healthcare space - such as FHIR.</p>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Warning</span>Long post ahead
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>This will be a long post - partly because there are various aspects to creating a REST API that aren’t addressed in the specification or leave me with concerns. So I’m going write up various aspects of architecting a REST API (particularly one that transfers lots of data) as it’s needed for the Dataset-JSON API discussion below.</p>
+</div>
+</div>
+</section>
+<section id="architecting-a-rest-api" class="level2">
+<h2 class="anchored" data-anchor-id="architecting-a-rest-api">Architecting a REST API</h2>
+<p>You can find the <a href="https://github.com/cdisc-org/DataExchange-DatasetJson-API">Dataset-JSON API repository on Github</a> and this includes a User’s Guide as well as the API specification as an OpenAPI specification (and an HTML rendering of that specification).</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>RFC9110 as a guide
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The User Guide includes a reference to the <a href="https://roy.gbiv.com/pubs/dissertation/top.htm">Fielding dissertation on REST</a>. I would also point folks to <a href="https://www.rfc-editor.org/rfc/rfc9110">RFC 9110</a> for HTTP Semantics as we go through this. The <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP">Mozilla docs</a> are good too.</p>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>FHIR as an example
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>FHIR is a healthcare data transfer REST API - an international standard. Here are some links for a <a href="https://fhirblog.com/2026/03/09/fhir-the-important-bits/amp/">primer</a> as well as the <a href="https://hl7.org/fhir/R4/http.html">official guide</a>. The OpenAPI specs (as yaml) can be found <a href="https://healthcare.docs.wso2.com/en/latest/resources/utils/fhir-api-oas-list/">here</a>.</p>
+</div>
+</div>
+<section id="environments" class="level3">
+<h3 class="anchored" data-anchor-id="environments">Environments</h3>
+<p>Not many folks think about this so I was glad to see it in the User’s Guide under “Optional Endpoints and Features”. In general, different environments can be distinguished with any of</p>
+<ul>
+<li>hostname (eg. dev.example.com, qa.example.com)</li>
+<li>port (eg. 80 for prod, 8080 for qa, 18080 for dev)</li>
+<li>path (eg. /dev, /qa, /prod)</li>
+</ul>
+<p>The user guide only highlights the path option - my experience has been that hostname is more common. The API specification is then based under environment’s base URL (FHIR calls this the “Service Base URL”).</p>
+</section>
+<section id="api-versioning-vs-content-versioning" class="level3">
+<h3 class="anchored" data-anchor-id="api-versioning-vs-content-versioning">API Versioning (vs content versioning)</h3>
+<p>This topic is a bit more subtle and more important when APIs are not relying on HATEOAS. When an API (aka the URLs / VERBs for the resources) is “defined” (OpenAPI) vs “discovered” (HATEOAS) - you need to think about how the API will evolve. It is important to have a mechanism to either report on the version of the API (with links to other versions) and/or potentially to support multiple versions of the API in a given implementation (so that clients can move from v&lt;N&gt; to v&lt;N+1&gt;).</p>
+<p>It’s also important to note that content versioning (the content of the requests and responses) can have different versions from the API itself.</p>
+<p>Here as well, there are multiple ways to do this</p>
+<ul>
+<li>path (eg. /v1, /v2)</li>
+<li>header (eg. <code>API-Version</code>)</li>
+</ul>
+<p>I often see path used vs header (easier to route) and again, this becomes part of the “Service (for that version) Base URL”. Also, version number for an API should just be an integer - this is not related to semantic versioning.</p>
+<p>This aspect is not addressed in the User’s Guide and different implementations will need to document this as we move from version 1 to version 2 of this API.</p>
+</section>
+<section id="authentication-authorization-audit" class="level3">
+<h3 class="anchored" data-anchor-id="authentication-authorization-audit">Authentication / Authorization / Audit</h3>
+<p>The main security aspects - Authentication, Authorization, and Auditing - should be addressed by the implementations of the API. Note that authentication mechanisms might need to be separate from authorization mechanisms.</p>
+<p>The Dataset-JSON API specifies a header of <code>api-key</code> on all the requests.</p>
+<p>I <em>think</em> that this is for authorization - what operations is this key-holder allowed to perform (and on what studies / datasets). But this isn’t clear in the User Guide.</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>TIL “X-” for custom headers is deprecated
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>I have to admit that, when I first saw the header <code>api-key</code>, I thought that was a huge mistake. That isn’t a defined header for HTTP and I assumed it would need an <code>X-</code> in front of that. That is not the case - the leading <code>X-</code> was deprecated as a requirement - it can still be used but isn’t required.</p>
+</div>
+</div>
+<p>There are some style concerns that I have with <code>api-key</code>. HTTP headers are case-insensitive but tend to be “defined” in Pascal case - except with hyphens between words. I would suspect that most APIs use <code>API-Key</code> officially (and have seen <code>Api-Key</code> as well).</p>
+<p>The one potential issue is that many APIs will prefix the key or token with a product name. That way there won’t be an issue with multi-API coordination. Something like <code>Dataset-JSON-API-Key</code> might be better.</p>
+</section>
+<section id="error-handling" class="level3">
+<h3 class="anchored" data-anchor-id="error-handling">Error Handling</h3>
+<p>The spec and User Guide make use of the 422 HTTP response code for all business logic errors and while that is appropriate for some situations, it isn’t for others. The FHIR guide (section 3.1.0.4.2) does a great job of listing the various HTTP status codes and when to use what. Particularly, for conditional requests or range requests - there are better more specific status codes that could be used.</p>
+<p>The User Guide has a section of various HTTP Status codes but doesn’t really address when these are to be used (other than a list of various notes at the end). It could be worth collecting this in the User Guide in a more concise manner as well as compare to other APIs.</p>
+</section>
+<section id="mime-types-and-content-negotiation" class="level3">
+<h3 class="anchored" data-anchor-id="mime-types-and-content-negotiation">MIME types and Content Negotiation</h3>
+<p>The Dataset-JSON specification details three representations for a dataset - JSON, NDJSON, and DSJC - with DSJC (Dataset-JSON Compressed) defined as zlib compression on the NDJSON representation. The spec defines a MIME type only for DSJC only - <code>application/vnd.cdisc.dataset-json.compressed</code></p>
+<p>This seems wholly backwards to me - I would have suggested that JSON and NDJSON could use the MIME types</p>
+<ul>
+<li><code>application/vnd.cdisc.dataset-json+json</code></li>
+<li><code>application/vnd.cdisc.dataset-json+ndjson</code></li>
+</ul>
+<p>And DSJC would be a zlib compressed NDJSON.</p>
+<p>When requesting a dataset - one can make use of the <code>Accept</code> and <code>Accept-Encoding</code> headers to ask for JSON or NDJSON and potentially with various compression encodings. Something like this:</p>
+<pre><code>Accept: application/vnd.cdisc.dataset-json+ndjson
+Accept-Encoding: deflate, zlib</code></pre>
+<p>and</p>
+<pre><code>Content-Type: application/vnd.cdisc.data-json+ndjson
+Content-Encoding: deflate</code></pre>
+<p>Many APIs also allow for the use of extensions on resource URIs in order to do content negotiation. A request for a dataset with <code>.json</code>, <code>.ndjson</code>, or <code>.dsjc</code> could basically operate the same as above.</p>
+<p>The API makes use of the generic <code>application/json</code> and <code>application/x-ndjson</code>.</p>
+</section>
+<section id="conditional-requests-and-concurrency" class="level3">
+<h3 class="anchored" data-anchor-id="conditional-requests-and-concurrency">Conditional Requests and Concurrency</h3>
+<p>Conditional headers include <code>If-Match</code>, <code>If-None-Match</code>, <code>If-Modified-Since</code>, <code>If-Unmodified-Since</code>. The first two make use of <code>ETag</code> values and the second two make use of <code>Last-Modified</code> values.</p>
+<p>The reason for these is to (1) limit bandwidth on GETs where the client might already have a cached copy and (2) pessimistic locking for creation, update, and potentially delete operations.</p>
+<p>There are some references in the User Guide to the use of <code>If-Modified-Since</code> and some usage is on collections (list of datasets) and using the header as a query criteria. That’s not the intent of that header.</p>
+<p>Concurrency issues (and HTTP status codes for them) are not addressed in the API User’s Guide but the read-write portion of the API will need to address this - hopefully with <code>ETag</code> and <code>If-Match</code> headers.</p>
+</section>
+</section>
+<section id="dataset-json-api" class="level2">
+<h2 class="anchored" data-anchor-id="dataset-json-api">Dataset-JSON API</h2>
+<p>OK! Now on to the API itself…</p>
+<p>The User Guide makes clear that for conformance (still being worked on), one can implement a read-only version or a read-write version. In addition, there are optional components, which are:</p>
+<ul>
+<li>NDJSON (and thus DSJC?) support</li>
+<li>Snapshots and Dataset versioning</li>
+<li>Study “Define” data (define.xml)</li>
+</ul>
+<section id="about" class="level3">
+<h3 class="anchored" data-anchor-id="about">About</h3>
+<p>The <code>/about</code> endpoint returns (GET) information about the service. The “about” object has the following:</p>
+<table class="caption-top table">
+<caption>About properties</caption>
+<colgroup>
+<col style="width: 16%">
+<col style="width: 25%">
+<col style="width: 18%">
+<col style="width: 40%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>property</th>
+<th>definition</th>
+<th>attributes</th>
+<th>intent</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>lastUpdated</td>
+<td>string (date-time)</td>
+<td>required</td>
+<td>…</td>
+</tr>
+<tr class="even">
+<td>author</td>
+<td>string (uri)</td>
+<td>required</td>
+<td>…</td>
+</tr>
+<tr class="odd">
+<td>repo</td>
+<td>string (uri)</td>
+<td>required</td>
+<td>…</td>
+</tr>
+<tr class="even">
+<td>links</td>
+<td>array-of-objects</td>
+<td>required (0+)</td>
+<td>…</td>
+</tr>
+<tr class="odd">
+<td>link.name</td>
+<td>string</td>
+<td>required</td>
+<td>…</td>
+</tr>
+<tr class="even">
+<td>link.href</td>
+<td>string</td>
+<td>required</td>
+<td>…</td>
+</tr>
+</tbody>
+</table>
+<p>I struggle with what the intent is of this object and properties are. The <code>links</code> property feels like HATEOAS</p>
+<p>The version of the API (as mentioned above) will be in the <code>/docs</code> resource generated from the OpenAPI spec. The list of capabilities (read-write, snapshots, define, ndjson) could be here but again are available from the spec. That said, NDJSON support should be handled via content negotiation and as an optional component, could be specified here as supported or not.</p>
+</section>
+<section id="studies" class="level3">
+<h3 class="anchored" data-anchor-id="studies">Studies</h3>
+<p>There are three study-related objects - <code>Studies</code>, <code>Study</code>, <code>StudyRequest</code>. Studies are identified by the <code>studyOID</code> value.</p>
+<table class="caption-top table">
+<caption>Study operations</caption>
+<colgroup>
+<col style="width: 9%">
+<col style="width: 25%">
+<col style="width: 17%">
+<col style="width: 21%">
+<col style="width: 25%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Verb</th>
+<th>URL</th>
+<th>Request</th>
+<th>Response</th>
+<th>Operation</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>GET</td>
+<td>/studies</td>
+<td>-</td>
+<td>array-of-Studies</td>
+<td>Get list of studies</td>
+</tr>
+<tr class="even">
+<td>POST</td>
+<td>/studies</td>
+<td>StudyRequest</td>
+<td>Study</td>
+<td>Create a study</td>
+</tr>
+<tr class="odd">
+<td>GET</td>
+<td>/studies/{studyOID}</td>
+<td>-</td>
+<td>Study</td>
+<td>Get a single study</td>
+</tr>
+<tr class="even">
+<td>PUT</td>
+<td>/studies/{studyOID}</td>
+<td>StudyRequest</td>
+<td>Study</td>
+<td>Update a study</td>
+</tr>
+<tr class="odd">
+<td>DELETE</td>
+<td>/studies/{studyOID}</td>
+<td>-</td>
+<td>-</td>
+<td>Delete a study</td>
+</tr>
+</tbody>
+</table>
+<p>As for the study-related objects - here are the properties and where they are used:</p>
+<table class="caption-top table">
+<caption>Study-related properties</caption>
+<colgroup>
+<col style="width: 23%">
+<col style="width: 25%">
+<col style="width: 19%">
+<col style="width: 9%">
+<col style="width: 7%">
+<col style="width: 14%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>property</th>
+<th>definition</th>
+<th>attributes</th>
+<th>Studies</th>
+<th>Study</th>
+<th>StudyRequest</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>studyOID</td>
+<td>string</td>
+<td>required</td>
+<td>X</td>
+<td>X</td>
+<td>X</td>
+</tr>
+<tr class="even">
+<td>name</td>
+<td>string</td>
+<td>required</td>
+<td>X</td>
+<td>X</td>
+<td>X</td>
+</tr>
+<tr class="odd">
+<td>label</td>
+<td>string</td>
+<td>required</td>
+<td>X</td>
+<td>X</td>
+<td>X</td>
+</tr>
+<tr class="even">
+<td>href</td>
+<td>string</td>
+<td>required</td>
+<td>X</td>
+<td>X</td>
+<td>?</td>
+</tr>
+<tr class="odd">
+<td>standards</td>
+<td>array-of-enums</td>
+<td>optional/nullable</td>
+<td>X</td>
+<td>X</td>
+<td>X</td>
+</tr>
+<tr class="even">
+<td>studyCreationDateTime</td>
+<td>string (date-time)</td>
+<td>optional</td>
+<td>X</td>
+<td>X</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td>datasets</td>
+<td>array-of-StudyDataset</td>
+<td>optional/nullable</td>
+<td></td>
+<td>X</td>
+<td></td>
+</tr>
+<tr class="even">
+<td>metaDataRef</td>
+<td>array-of-MetaDataRef</td>
+<td>optional/nullable</td>
+<td>X</td>
+<td>X</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td>snapshots</td>
+<td>array-of-Snapshot</td>
+<td>optional/nullable</td>
+<td></td>
+<td>X</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<section id="standards" class="level4">
+<h4 class="anchored" data-anchor-id="standards">Standards</h4>
+<p>The <code>standards</code> values are listed as <code>sendig</code>, <code>sdtmig</code>, <code>adamig</code>, and <code>other</code>. For a pre-clinical study you may have datasets using SEND (ADaM is not always used for pre-clinical studies). For a clinical (drug / biologic) study you may have datasets for both SDTM and ADaM. For a clinical (device) study you may only have ADaM datasets (device submissions don’t have to use SDTM). I am assuming this list of values on the Study will limit the values used on the datasets under the study.</p>
+</section>
+<section id="studydataset-metadataref-and-snapshot" class="level4">
+<h4 class="anchored" data-anchor-id="studydataset-metadataref-and-snapshot">StudyDataset, MetaDataRef, and Snapshot</h4>
+<p>StudyDatasets are core part of the API and we cover that next. Snapshot and MetaDataRef are both part of the optional “Study-Snapshots” and “Define” capabilities.</p>
+<p>For the most part, this is a standard REST API for a simple object. There are some obvious business rules to consider - creating a study with an existing <code>studyOID</code>, updating a study with a correct URL but the <code>studyOID</code> doesn’t match between body and URL, deleting a study that doesn’t exist or what to do if you can’t delete all the datasets for a given study (assuming cascading deletes). This information would add value to the User’s Guide.</p>
+<p>I also should look at the ODM-XML definition of a Study or some of the other CDISC REST APIs to verify this object definition (or the intended content of these properties). In particular, the <code>href</code> property feels like HATEOAS (does this point to the same URL - is this like “_id”?)</p>
+<p>There are a few issues when looking at the JSON OpenAPI file.</p>
+<ul>
+<li>There is a default value on studyCreationDateTime of <code>2025-11-17T20:09:33.999933Z</code> which seems pretty magical</li>
+<li>There is a missing <code>href</code> definition on StudyRequest even though it is marked as required</li>
+<li>There is an empty string value option in the <code>standards</code> property for StudyRequest</li>
+</ul>
+<p>This is also missing a property for study last modified date and time - which is used in various other operations within the API. This also begs the question of why the <code>standard</code> isn’t part of the Dataset-JSON dataset metadata.</p>
+</section>
+</section>
+<section id="study-datasets" class="level3">
+<h3 class="anchored" data-anchor-id="study-datasets">Study-Datasets</h3>
+<p>This is the core part of the API - how to get Study Datasets as Dataset-JSON objects. Part of the challenge with designing a REST API for a Dataset-JSON object is that a Dataset-JSON object contains multiple concepts - dataset metadata, column metadata, and rows of data. The REST API could have considered each of these as their own resources but instead makes use of query parameters.</p>
+<p>There are N Study-Dataset-related objects - StudyDataset, DatasetJson, RowData Study-Datasets are identified by the <code>studyOID</code> and <code>itemGroupOID</code> (called <code>datasetOID</code> below) values. This concept always relates to the <strong>LATEST</strong> version of the data.</p>
+<table class="caption-top table">
+<caption>Study-Dataset operations</caption>
+<colgroup>
+<col style="width: 6%">
+<col style="width: 32%">
+<col style="width: 17%">
+<col style="width: 18%">
+<col style="width: 26%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Verb</th>
+<th>URL</th>
+<th>Request</th>
+<th>Response</th>
+<th>Operation</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>GET</td>
+<td>/studies/{studyOID}/datasets</td>
+<td>-</td>
+<td>array-of-StudyDatasets</td>
+<td>Get list of datasets for a study</td>
+</tr>
+<tr class="even">
+<td>POST</td>
+<td>/studies/{studyOID}/datasets</td>
+<td>standard, DatasetJson</td>
+<td>StudyDataset</td>
+<td>Create a dataset within the study</td>
+</tr>
+<tr class="odd">
+<td>GET</td>
+<td>/studies/{studyOID}/datasets/{datasetOID}</td>
+<td>-</td>
+<td>DatasetJson</td>
+<td>Get a single study-dataset</td>
+</tr>
+<tr class="even">
+<td>PUT</td>
+<td>/studies/{studyOID}/datasets/{datasetOID}</td>
+<td>standard, DatasetJson</td>
+<td>StudyDataset</td>
+<td>Update a study-dataset</td>
+</tr>
+<tr class="odd">
+<td>PATCH</td>
+<td>/studies/{studyOID}/datasets/{datasetOID}</td>
+<td>RowData</td>
+<td>StudyDataset</td>
+<td>Append records to a study-dataset</td>
+</tr>
+<tr class="even">
+<td>DELETE</td>
+<td>/studies/{studyOID}/datasets/{datasetOID}</td>
+<td>-</td>
+<td>-</td>
+<td>Delete a study</td>
+</tr>
+</tbody>
+</table>
+<p>Adding to the operations above</p>
+<ul>
+<li>Getting the list of datasets for a study can be filtered by <code>standard</code> and last modified date (with <code>If-Modified-Since</code> header)</li>
+<li>Getting a single dataset can be limited with use of <code>metadataonly</code> or <code>dataonly</code> query parameters</li>
+<li>Getting a single dataset can be limited with use of <code>offset</code> and <code>limit</code> query parameters</li>
+</ul>
+<p>Again, this would be a much better API if <code>standard</code> was part of the Dataset-JSON metadata.</p>
+<p>As for the study-related objects - here are the properties and where they are used:</p>
+<table class="caption-top table">
+<caption>Study-Dataset-related properties</caption>
+<colgroup>
+<col style="width: 26%">
+<col style="width: 22%">
+<col style="width: 17%">
+<col style="width: 12%">
+<col style="width: 12%">
+<col style="width: 8%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>property</th>
+<th>definition</th>
+<th>attributes</th>
+<th>StudyDataset</th>
+<th>DatasetJson</th>
+<th>RowData</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>itemGroupOID</td>
+<td>string</td>
+<td>required</td>
+<td>X</td>
+<td>X</td>
+<td></td>
+</tr>
+<tr class="even">
+<td>name</td>
+<td>string</td>
+<td>required</td>
+<td>X</td>
+<td>X</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td>label</td>
+<td>string</td>
+<td>required</td>
+<td>X</td>
+<td>X</td>
+<td></td>
+</tr>
+<tr class="even">
+<td>href</td>
+<td>string</td>
+<td>required</td>
+<td>X</td>
+<td></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td>records</td>
+<td>integer</td>
+<td>-varies-</td>
+<td>X/required</td>
+<td>X (null=0)</td>
+<td></td>
+</tr>
+<tr class="even">
+<td>standard</td>
+<td>string - enum</td>
+<td>optional/nullable</td>
+<td>X</td>
+<td>X</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td>datasetJSONCreationDateTime</td>
+<td>string (date-time)</td>
+<td>optional/nullable</td>
+<td>X</td>
+<td>X</td>
+<td></td>
+</tr>
+<tr class="even">
+<td>datasetJSONVersion</td>
+<td>string - enum</td>
+<td>required</td>
+<td></td>
+<td>X</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td>studyOID</td>
+<td>string</td>
+<td>required</td>
+<td></td>
+<td>X</td>
+<td></td>
+</tr>
+<tr class="even">
+<td>fileOID</td>
+<td>string</td>
+<td>optional/nullable</td>
+<td></td>
+<td>X</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td>dbLastModifiedDateTime</td>
+<td>string (date-time)</td>
+<td>optional</td>
+<td></td>
+<td>X</td>
+<td></td>
+</tr>
+<tr class="even">
+<td>originator</td>
+<td>string</td>
+<td>optional/nullable</td>
+<td></td>
+<td>X</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td>sourceSystem</td>
+<td>SourceSystem</td>
+<td>optional</td>
+<td></td>
+<td>X</td>
+<td></td>
+</tr>
+<tr class="even">
+<td>metaDataVersionOID</td>
+<td>string</td>
+<td>optional/nullable</td>
+<td></td>
+<td>X</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td>metaDataRef</td>
+<td>string</td>
+<td>optional/nullable</td>
+<td></td>
+<td>X</td>
+<td></td>
+</tr>
+<tr class="even">
+<td>columns</td>
+<td>array-of-Columns</td>
+<td>required</td>
+<td></td>
+<td>X</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td>rows</td>
+<td>array-of-arrays</td>
+<td>optional</td>
+<td></td>
+<td>X</td>
+<td>X</td>
+</tr>
+</tbody>
+</table>
+<p>I won’t go through <code>SourceSystem</code> and <code>Column</code> as those match the Dataset-JSON specification (with the exception of the use of JSON schema <code>format</code> in the API vs <code>pattern</code> in the Dataset-JSON specification).</p>
+<p>We’ve discussed the enumerated values for <code>standard</code> already. For <code>datasetJSONVersion</code>, this list is <code>1.1</code>, and <code>1.1.0</code> through <code>1.1.5</code>. Frankly, I don’t know what changed in the various <code>1.1.x</code> releases - and how to deal with versions that my implementation can’t handle.</p>
+<p>I don’t get what <code>href</code> is supposed to be here (again, feels like “_id” in HATEOAS). There are again obvious business rule violations where it would be useful for the User Guide to go over.</p>
+<p>The use of both <code>metadataonly</code> and <code>dataonly</code> (what happens if I set both to true or both to false?) vs the use of subresource URLs or potentially a <code>format</code> parameter with values of <code>metadata</code>, <code>data</code> with a default of both.</p>
+<p>There is a whole section on “API Identifiers” as a caution of using HTTP/HTML special characters in your <code>studyOID</code> or <code>itemGroupOID</code> vs URL-encoding them.</p>
+<p>From what I can tell, updating the <code>standard</code> (actually any property) - requires getting and resending the entire dataset. It also seems odd that I could send a <code>datasetJSONCreationDateTime</code> in the POST request to create the object. One could argue that creation of objects could be done with a PUT on the resource - update if it exists and create if not.</p>
+<p>Also, as mentioned in part 2, you can’t really properly validate the data coming in on a create or update (or append) operation without the full define.xml data. And thus in order to do that - given a <code>metaDataRef</code> - you will need to get that data. These can be costly operations for a synchronous network call - I wonder if a better API could have been a more asynchronous task-based one. You are basically initiating a data pipeline job - which is then a resource of its own (and can include a callback-URL).</p>
+<p>I actually wonder if better filters will be needed - even something like data for a given <code>USUBJID</code>.</p>
+<p>Similar to the Study object definitions, there are some issues with these objects as well in the OpenAPI json file:</p>
+<ul>
+<li>The <code>datasetJSONCreationDateTime</code> has a default of <code>2025-11-17T20:09:33.993457Z</code></li>
+</ul>
+</section>
+</section>
+<section id="optional-api-capabilities" class="level2">
+<h2 class="anchored" data-anchor-id="optional-api-capabilities">Optional API Capabilities</h2>
+<p>Again, the “write” part of this API is considered optional. Let’s look at some of the other optional API capabilities.</p>
+<section id="ndjson-support" class="level3">
+<h3 class="anchored" data-anchor-id="ndjson-support">NDJSON support</h3>
+<p>I’ve mentioned the potential use of content negotiation for NDJSON support above. Looking at the OpenAPI file and the User’s Guide, there seem to be two endpoints for getting a dataset as NDJSON.</p>
+<p>The subresource <code>$export</code> and the subresource <code>/ndjson</code> on the Study-Dataset URL can return the Dataset-JSON object as NDJSON. I think the idea here is to call the first, which creates a job and returns a <code>Location</code> header (I’m assuming) to get the data. The second subresource is then an example of where the data might be - and if called early returns a 202.</p>
+<p>I don’t understand why processing the return of the NDJSON version of a dataset would take any longer than the JSON version of the dataset. This whole section and use case don’t make sense to me.</p>
+</section>
+<section id="study-snapshots-and-thus-dataset-versioning" class="level3">
+<h3 class="anchored" data-anchor-id="study-snapshots-and-thus-dataset-versioning">Study-Snapshots (and thus dataset versioning)</h3>
+<p>I was thrilled to see this added but am worried that this brings up other concerns. Most back-end systems for clinical trial data have both source code <em>AND DATA</em> version control. All data updates create a new version (integer counter), and at given points, the data in a study can get tagged. My experience is that this has been used to tag versions of SDTM or ADaM datasets used in various versions of a CSR. The labels will be things like “csr_1” or “csr_final” but again can be anything. There are times that the label will need to be moved to a different version of a dataset - rare but done under GXP processes. It is literally a tag on the data.</p>
+<p>But this also makes me realize that there is nothing in Dataset-JSON nor this API that deals with version of data. There is only a timestamp. Which is important - but also can be related to a version that is an integer or commit hash. I’d want to see what dataset versions the label has been applied to. I’d also want to see - for a given version of the dataset - what labels it might have.</p>
+<p>I’m not going to go through this part of the API as I did above - I don’t think it’s worth it at this point.</p>
+</section>
+<section id="study-define-define.xml" class="level3">
+<h3 class="anchored" data-anchor-id="study-define-define.xml">Study “Define” (define.xml)</h3>
+<p>This part of the API allows you to get the define.xml as a string for the SDTM or ADaM subset of your study. I don’t know why they return the XML as a string here - versus using a multi-part response where one part could have a MIME type of <code>application/xml</code> I also think that we will want to support something like Define-JSON when that is ready.</p>
+</section>
+</section>
+<section id="conclusion" class="level2">
+<h2 class="anchored" data-anchor-id="conclusion">Conclusion</h2>
+<p>I’m not gonna lie - this part of the Dataset-JSON deliverables was pretty underwhelming to me. I get the value in this but really think this needs both more brains on it to go through scenarios and use-cases as well as more software engineering chops to create a production-ready spec. I get that there will be very slow up-take for the API and there will be future changes. As I said in part 2, I’m happy to help - this isn’t just to criticize. I just don’t know how best to do that.</p>
+<p>This ends my review of the Dataset-JSON deliverables from CDISC. I hope you find value in this. As always, you can contact via LinkedIn, <a href="https://hachyderm.io/@brianrepko">Mastodon</a>, email, or phone - it’s all there on <a href="https://www.learnthinkcode.com">my webpage</a>.</p>
+
+
+</section>
+
+ ]]></description>
+  <category>pharmaverse</category>
+  <category>data</category>
+  <guid>https://brianrepko.github.io/blog/posts/2026-03-11-datasetjson-part3/</guid>
+  <pubDate>Wed, 11 Mar 2026 00:00:00 GMT</pubDate>
+  <media:content url="https://brianrepko.github.io/blog/posts/2026-03-11-datasetjson-part3/datasetjson.png" medium="image" type="image/png" height="72" width="144"/>
+</item>
 <item>
   <title>edgePython and other AI thoughts</title>
   <dc:creator>Brian Repko</dc:creator>
@@ -1233,36 +1916,6 @@ font-style: inherit;">();</span></span></code></pre></div></div>
   <guid>https://brianrepko.github.io/blog/posts/2010-01-25-qa-versus-qc/</guid>
   <pubDate>Mon, 25 Jan 2010 00:00:00 GMT</pubDate>
   <media:content url="https://brianrepko.github.io/blog/posts/2010-01-25-qa-versus-qc/checkbox.jpg" medium="image" type="image/jpeg"/>
-</item>
-<item>
-  <title>When is a story prepared?</title>
-  <dc:creator>Brian Repko</dc:creator>
-  <link>https://brianrepko.github.io/blog/posts/2010-01-25-when-is-a-story-prepared/</link>
-  <description><![CDATA[ 
-
-
-
-
-
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="https://brianrepko.github.io/blog/posts/2010-01-25-when-is-a-story-prepared/blog-circles.jpg" class="quarto-figure quarto-figure-center figure-img" height="400"></p>
-</figure>
-</div>
-<p>This is another drawing that I use a lot while coaching agile projects and actually is part of multiple discussions around agile methods. Most agile methods talk about stories being created by the customer and put on a backlog. For some iteration, at iteration planning, the story gets explained to developers and testers. They work on the story until it is complete. And we have lots of conversations, as agile coaches and teams, about “when is a story complete”.</p>
-<p>This misses a lot of the work that needs to be done in order to make teams effective. I like to have regular backlog grooming meetings with part of the team and ask the question - <em><strong>is this story prepared?</strong></em>. <em><strong>What is needed in order to bring this story to iteration planning?</strong></em> That needed work might involve QA (quality assurance) for acceptance tests or functional tests. That might involve UX (user experience) for wireframes or drawings. That might involve some TA (technical architecture) work or IA (information architecture, or domain modeling) work depending on the story. It might require a BA to work out the business value of this story or how to break it up into what needs to done now versus later (breaking up stories into smaller, potentially optional pieces). Its only when a story is prepared that it should be brought to iteration planning.</p>
-<p>I also use this picture to help explain why some work is “on the board” for the iteration (meaning we are tracking velocity and burndown charts - its the developer/tester circle) vs work that needs to get done but we aren’t measuring velocity for it. The first is working towards completing the story. The latter is working towards getting the story prepared.</p>
-<p>It also helps explain the roles of the non-customer, non-developer and non-tester folks…though I’m pretty careful to explain that that 2nd circle is optional work (story by story) and that that work can be done by anyone with those skills. Its really about what would make the communication of this story effective and doing that in as lightweight of a fashion as you need.</p>
-<p>The last part of this drawing is that the story doesn’t stop because development is done. Its really done when its deployed (some would say deployed to production) and supported. This means that the story needs to be shared with operations and support teams. I’ve seen this done as part of a release process and actually made it the responsibility of the whole team to figure how to to communicate the stories that are being released. Really each circle needs to figure out when its done with the story and how to communicate to the next circle (and then there are feedback loops!).</p>
-<p>Its really about effective communication and community. I didn’t get this last part until attending a session with <a href="https://nonodename.com/post/davidhussman/">David Hussman</a> who talks about building community around a story.</p>
-
-
-
- ]]></description>
-  <category>agile</category>
-  <guid>https://brianrepko.github.io/blog/posts/2010-01-25-when-is-a-story-prepared/</guid>
-  <pubDate>Mon, 25 Jan 2010 00:00:00 GMT</pubDate>
-  <media:content url="https://brianrepko.github.io/blog/posts/2010-01-25-when-is-a-story-prepared/blog-circles.jpg" medium="image" type="image/jpeg"/>
 </item>
 </channel>
 </rss>
