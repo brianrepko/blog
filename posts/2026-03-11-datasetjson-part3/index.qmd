@@ -381,5 +381,5 @@ I just don't know how best to do that.
 
 This ends my review of the Dataset-JSON deliverables from CDISC.
 I hope you find value in this.
-As always, you can contact via LinkedIn, [Mastodon](https://hachyderm.io/@brianrepko), email, or phone - it's all there on [my webpage](https://www.learnthinkcode.com).
+As always, you can contact via LinkedIn, Mastodon, email, or phone - it's all there at the top of this page or on [my webpage](https://www.learnthinkcode.com).
 
