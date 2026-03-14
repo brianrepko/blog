@@ -31,8 +31,9 @@
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>This is part 3 of a 3 part series on dataset-json.</p>
-<p>You can find part 1 <a href="https://brianrepko.github.io/blog/posts/2025-12-31-datasetjson-part1/" target="_blank">here</a> for an overview of dataset-json. You can find part 2 <a href="https://brianrepko.github.io/blog/posts/2026-01-15-datasetjson-part2/" target="_blank">here</a> for a list of concerns / issues with the dataset-json specification.</p>
+<p>This is part 3 of a 3 part series on Dataset-JSON.</p>
+<p>You can find part 1 <a href="https://brianrepko.github.io/blog/posts/2025-12-31-datasetjson-part1/" target="_blank">here</a> for an overview of Dataset-JSON.</p>
+<p>You can find part 2 <a href="https://brianrepko.github.io/blog/posts/2026-01-15-datasetjson-part2/" target="_blank">here</a> for a list of concerns / issues with the Dataset-JSON specification.</p>
 </div>
 </div>
 <div class="callout callout-style-default callout-note callout-titled">
@@ -158,12 +159,12 @@ Accept-Encoding: deflate, zlib</code></pre>
 <pre><code>Content-Type: application/vnd.cdisc.data-json+ndjson
 Content-Encoding: deflate</code></pre>
 <p>Many APIs also allow for the use of extensions on resource URIs in order to do content negotiation. A request for a dataset with <code>.json</code>, <code>.ndjson</code>, or <code>.dsjc</code> could basically operate the same as above.</p>
-<p>The API makes use of the generic <code>application/json</code> and <code>application/x-ndjson</code>.</p>
+<p>The API makes use of the generic <code>application/json</code> and <code>application/x-ndjson</code>. This is also where one could add Dataset-JSON version information (when we have more than just 1.1).</p>
 </section>
 <section id="conditional-requests-and-concurrency" class="level3">
 <h3 class="anchored" data-anchor-id="conditional-requests-and-concurrency">Conditional Requests and Concurrency</h3>
 <p>Conditional headers include <code>If-Match</code>, <code>If-None-Match</code>, <code>If-Modified-Since</code>, <code>If-Unmodified-Since</code>. The first two make use of <code>ETag</code> values and the second two make use of <code>Last-Modified</code> values.</p>
-<p>The reason for these is to (1) limit bandwidth on GETs where the client might already have a cached copy and (2) pessimistic locking for creation, update, and potentially delete operations.</p>
+<p>The reason for these is to (1) limit bandwidth on GETs where the client might already have a cached copy and (2) optimistic locking for creation, update, and potentially delete operations.</p>
 <p>There are some references in the User Guide to the use of <code>If-Modified-Since</code> and some usage is on collections (list of datasets) and using the header as a query criteria. That’s not the intent of that header.</p>
 <p>Concurrency issues (and HTTP status codes for them) are not addressed in the API User’s Guide but the read-write portion of the API will need to address this - hopefully with <code>ETag</code> and <code>If-Match</code> headers.</p>
 </section>
@@ -179,7 +180,7 @@ Content-Encoding: deflate</code></pre>
 </ul>
 <section id="about" class="level3">
 <h3 class="anchored" data-anchor-id="about">About</h3>
-<p>The <code>/about</code> endpoint returns (GET) information about the service. The “about” object has the following:</p>
+<p>The <code>/about</code> endpoint returns (GET) information about the service. The “About” object has the following:</p>
 <table class="caption-top table">
 <caption>About properties</caption>
 <colgroup>
@@ -201,42 +202,42 @@ Content-Encoding: deflate</code></pre>
 <td>lastUpdated</td>
 <td>string (date-time)</td>
 <td>required</td>
-<td>…</td>
+<td>timestamp for last release??</td>
 </tr>
 <tr class="even">
 <td>author</td>
 <td>string (uri)</td>
 <td>required</td>
-<td>…</td>
+<td>website for organization??</td>
 </tr>
 <tr class="odd">
 <td>repo</td>
 <td>string (uri)</td>
 <td>required</td>
-<td>…</td>
+<td>why would I share this??</td>
 </tr>
 <tr class="even">
 <td>links</td>
 <td>array-of-objects</td>
 <td>required (0+)</td>
-<td>…</td>
+<td>links to various features??</td>
 </tr>
 <tr class="odd">
 <td>link.name</td>
 <td>string</td>
 <td>required</td>
-<td>…</td>
+<td>name of link (any stds?)??</td>
 </tr>
 <tr class="even">
 <td>link.href</td>
 <td>string</td>
 <td>required</td>
-<td>…</td>
+<td>URL under service base URL</td>
 </tr>
 </tbody>
 </table>
 <p>I struggle with what the intent is of this object and properties are. The <code>links</code> property feels like HATEOAS</p>
-<p>The version of the API (as mentioned above) will be in the <code>/docs</code> resource generated from the OpenAPI spec. The list of capabilities (read-write, snapshots, define, ndjson) could be here but again are available from the spec. That said, NDJSON support should be handled via content negotiation and as an optional component, could be specified here as supported or not.</p>
+<p>The version of the API (as mentioned above) will be in the <code>/docs</code> resource generated from the OpenAPI spec. That said, the About object could represent a machine-readable version of that information. The list of capabilities (read-write, snapshots, define, ndjson) could be here but again are available from the spec. That said, NDJSON support should be handled via content negotiation and as an optional component, could be specified here as supported or not.</p>
 </section>
 <section id="studies" class="level3">
 <h3 class="anchored" data-anchor-id="studies">Studies</h3>
@@ -399,22 +400,22 @@ Content-Encoding: deflate</code></pre>
 </section>
 <section id="studydataset-metadataref-and-snapshot" class="level4">
 <h4 class="anchored" data-anchor-id="studydataset-metadataref-and-snapshot">StudyDataset, MetaDataRef, and Snapshot</h4>
-<p>StudyDatasets are core part of the API and we cover that next. Snapshot and MetaDataRef are both part of the optional “Study-Snapshots” and “Define” capabilities.</p>
+<p>StudyDatasets are a core part of the API and we cover that next. Snapshot and MetaDataRef are both part of the optional “Study-Snapshots” and “Define” capabilities.</p>
 <p>For the most part, this is a standard REST API for a simple object. There are some obvious business rules to consider - creating a study with an existing <code>studyOID</code>, updating a study with a correct URL but the <code>studyOID</code> doesn’t match between body and URL, deleting a study that doesn’t exist or what to do if you can’t delete all the datasets for a given study (assuming cascading deletes). This information would add value to the User’s Guide.</p>
-<p>I also should look at the ODM-XML definition of a Study or some of the other CDISC REST APIs to verify this object definition (or the intended content of these properties). In particular, the <code>href</code> property feels like HATEOAS (does this point to the same URL - is this like “_id”?)</p>
+<p>I also should look at the ODM-XML definition of a Study or some of the other CDISC REST APIs to verify this object definition (or the intended content of these properties). In particular, the <code>href</code> property feels like HATEOAS (does this point to the same URL - is this like “_id”?).</p>
 <p>There are a few issues when looking at the JSON OpenAPI file.</p>
 <ul>
-<li>There is a default value on studyCreationDateTime of <code>2025-11-17T20:09:33.999933Z</code> which seems pretty magical</li>
+<li>There is a default value on <code>studyCreationDateTime</code> of <code>2025-11-17T20:09:33.999933Z</code> which seems pretty magical</li>
 <li>There is a missing <code>href</code> definition on StudyRequest even though it is marked as required</li>
 <li>There is an empty string value option in the <code>standards</code> property for StudyRequest</li>
 </ul>
-<p>This is also missing a property for study last modified date and time - which is used in various other operations within the API. This also begs the question of why the <code>standard</code> isn’t part of the Dataset-JSON dataset metadata.</p>
+<p>This is also missing a property for study last modified timestamp - which is used in various other operations within the API. This also begs the question of why the <code>standard</code> isn’t part of the Dataset-JSON dataset metadata.</p>
 </section>
 </section>
 <section id="study-datasets" class="level3">
 <h3 class="anchored" data-anchor-id="study-datasets">Study-Datasets</h3>
-<p>This is the core part of the API - how to get Study Datasets as Dataset-JSON objects. Part of the challenge with designing a REST API for a Dataset-JSON object is that a Dataset-JSON object contains multiple concepts - dataset metadata, column metadata, and rows of data. The REST API could have considered each of these as their own resources but instead makes use of query parameters.</p>
-<p>There are N Study-Dataset-related objects - StudyDataset, DatasetJson, RowData Study-Datasets are identified by the <code>studyOID</code> and <code>itemGroupOID</code> (called <code>datasetOID</code> below) values. This concept always relates to the <strong>LATEST</strong> version of the data.</p>
+<p>This is the core part of the API - how to get Study Datasets as Dataset-JSON objects. Part of the challenge with designing a REST API for a Dataset-JSON object is that a Dataset-JSON object contains multiple concepts - dataset metadata, column metadata, and rows of data. The REST API could have considered each of these as their own sub-resources but instead makes use of query parameters.</p>
+<p>There are three Study-Dataset-related objects - StudyDataset, DatasetJson, RowData. Study-Datasets are identified by the <code>studyOID</code> and <code>itemGroupOID</code> (called <code>datasetOID</code> below) values. This concept always relates to the <strong>LATEST</strong> version of the dataset.</p>
 <table class="caption-top table">
 <caption>Study-Dataset operations</caption>
 <colgroup>
@@ -648,7 +649,7 @@ Content-Encoding: deflate</code></pre>
 <p>I won’t go through <code>SourceSystem</code> and <code>Column</code> as those match the Dataset-JSON specification (with the exception of the use of JSON schema <code>format</code> in the API vs <code>pattern</code> in the Dataset-JSON specification).</p>
 <p>We’ve discussed the enumerated values for <code>standard</code> already. For <code>datasetJSONVersion</code>, this list is <code>1.1</code>, and <code>1.1.0</code> through <code>1.1.5</code>. Frankly, I don’t know what changed in the various <code>1.1.x</code> releases - and how to deal with versions that my implementation can’t handle.</p>
 <p>I don’t get what <code>href</code> is supposed to be here (again, feels like “_id” in HATEOAS). There are again obvious business rule violations where it would be useful for the User Guide to go over.</p>
-<p>The use of both <code>metadataonly</code> and <code>dataonly</code> (what happens if I set both to true or both to false?) vs the use of subresource URLs or potentially a <code>format</code> parameter with values of <code>metadata</code>, <code>data</code> with a default of both.</p>
+<p>The use of both <code>metadataonly</code> and <code>dataonly</code> (what happens if I set both to true or both to false?) vs the use of sub-resource URLs or potentially a <code>format</code> parameter with values of <code>metadata</code>, <code>data</code> with a default of both. I’m not sure how to represent a <code>dataonly</code> DatasetJson object given required property attributes.</p>
 <p>There is a whole section on “API Identifiers” as a caution of using HTTP/HTML special characters in your <code>studyOID</code> or <code>itemGroupOID</code> vs URL-encoding them.</p>
 <p>From what I can tell, updating the <code>standard</code> (actually any property) - requires getting and resending the entire dataset. It also seems odd that I could send a <code>datasetJSONCreationDateTime</code> in the POST request to create the object. One could argue that creation of objects could be done with a PUT on the resource - update if it exists and create if not.</p>
 <p>Also, as mentioned in part 2, you can’t really properly validate the data coming in on a create or update (or append) operation without the full define.xml data. And thus in order to do that - given a <code>metaDataRef</code> - you will need to get that data. These can be costly operations for a synchronous network call - I wonder if a better API could have been a more asynchronous task-based one. You are basically initiating a data pipeline job - which is then a resource of its own (and can include a callback-URL).</p>
@@ -665,13 +666,13 @@ Content-Encoding: deflate</code></pre>
 <section id="ndjson-support" class="level3">
 <h3 class="anchored" data-anchor-id="ndjson-support">NDJSON support</h3>
 <p>I’ve mentioned the potential use of content negotiation for NDJSON support above. Looking at the OpenAPI file and the User’s Guide, there seem to be two endpoints for getting a dataset as NDJSON.</p>
-<p>The subresource <code>$export</code> and the subresource <code>/ndjson</code> on the Study-Dataset URL can return the Dataset-JSON object as NDJSON. I think the idea here is to call the first, which creates a job and returns a <code>Location</code> header (I’m assuming) to get the data. The second subresource is then an example of where the data might be - and if called early returns a 202.</p>
+<p>The sub-resource <code>$export</code> and the sub-resource <code>/ndjson</code> on the Study-Dataset URL can return the Dataset-JSON object as NDJSON. I think the idea here is to call the first, which creates a job and returns a <code>Location</code> header (I’m assuming) to get the data. The second sub-resource is then an example of where the data might be - and if called early returns a 202.</p>
 <p>I don’t understand why processing the return of the NDJSON version of a dataset would take any longer than the JSON version of the dataset. This whole section and use case don’t make sense to me.</p>
 </section>
 <section id="study-snapshots-and-thus-dataset-versioning" class="level3">
 <h3 class="anchored" data-anchor-id="study-snapshots-and-thus-dataset-versioning">Study-Snapshots (and thus dataset versioning)</h3>
-<p>I was thrilled to see this added but am worried that this brings up other concerns. Most back-end systems for clinical trial data have both source code <em>AND DATA</em> version control. All data updates create a new version (integer counter), and at given points, the data in a study can get tagged. My experience is that this has been used to tag versions of SDTM or ADaM datasets used in various versions of a CSR. The labels will be things like “csr_1” or “csr_final” but again can be anything. There are times that the label will need to be moved to a different version of a dataset - rare but done under GXP processes. It is literally a tag on the data.</p>
-<p>But this also makes me realize that there is nothing in Dataset-JSON nor this API that deals with version of data. There is only a timestamp. Which is important - but also can be related to a version that is an integer or commit hash. I’d want to see what dataset versions the label has been applied to. I’d also want to see - for a given version of the dataset - what labels it might have.</p>
+<p>I was thrilled to see this added but am worried that this brings up other concerns. Most back-end systems for clinical trial data have both source code <em>AND DATA</em> version control. All data updates create a new version (integer counter or commit hash), and at given points, the data in a study can get tagged. My experience is that this has been used to tag versions of SDTM or ADaM datasets used in various versions of a CSR. The labels will be things like “csr_1” or “csr_final” but again can be anything. There are times that the label will need to be moved to a different version of a dataset - rare but done under GXP processes. It is literally a tag across the dataset versions within a study.</p>
+<p>But this also makes me realize that there is nothing in Dataset-JSON nor this API that deals with version of data. There is only a timestamp. Which is important - but also can be related to a version that is an integer or commit hash. I’d want to see what dataset versions the label has been applied to across the study. I’d also want to see - for a given version of the dataset - all the labels it might have.</p>
 <p>I’m not going to go through this part of the API as I did above - I don’t think it’s worth it at this point.</p>
 </section>
 <section id="study-define-define.xml" class="level3">
