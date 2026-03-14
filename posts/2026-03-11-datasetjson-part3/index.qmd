@@ -10,16 +10,15 @@ categories:
 
 ::: callout-tip
 ## Series
+This is part 3 of a 3 part series on Dataset-JSON.
 
-This is part 3 of a 3 part series on dataset-json.
+You can find part 1 [here](https://brianrepko.github.io/blog/posts/2025-12-31-datasetjson-part1/){target="_blank"} for an overview of Dataset-JSON.
 
-You can find part 1 [here](https://brianrepko.github.io/blog/posts/2025-12-31-datasetjson-part1/){target="_blank"} for an overview of dataset-json.
-You can find part 2 [here](https://brianrepko.github.io/blog/posts/2026-01-15-datasetjson-part2/){target="_blank"} for a list of concerns / issues with the dataset-json specification.
+You can find part 2 [here](https://brianrepko.github.io/blog/posts/2026-01-15-datasetjson-part2/){target="_blank"} for a list of concerns / issues with the Dataset-JSON specification.
 :::
 
 ::: callout-note
 ## CDISC workshop
-
 There is a planned Dataset-JSON Hands-On Implementation workshop on 18 May 2026 from 0900-1300 CET at the 2026 CDISC Europe Interchange conference in Milan. 
 See [the main website](https://www.cdisc.org/events/interchange/2026-cdisc-europe-interchange) or [here](https://web.cvent.com/event/b32aaba1-214b-486e-8b5a-fdc8342f9794/websitePage:645d57e4-75eb-4769-b2c0-f201a0bfc6ce) for details.
 :::
@@ -147,13 +146,14 @@ Many APIs also allow for the use of extensions on resource URIs in order to do c
 A request for a dataset with `.json`, `.ndjson`, or `.dsjc` could basically operate the same as above.
 
 The API makes use of the generic `application/json` and `application/x-ndjson`.
+This is also where one could add Dataset-JSON version information (when we have more than just 1.1).
 
 ### Conditional Requests and Concurrency
 
 Conditional headers include `If-Match`, `If-None-Match`, `If-Modified-Since`, `If-Unmodified-Since`.
 The first two make use of `ETag` values and the second two make use of `Last-Modified` values.
 
-The reason for these is to (1) limit bandwidth on GETs where the client might already have a cached copy and (2) pessimistic locking for creation, update, and potentially delete operations.
+The reason for these is to (1) limit bandwidth on GETs where the client might already have a cached copy and (2) optimistic locking for creation, update, and potentially delete operations.
 
 There are some references in the User Guide to the use of `If-Modified-Since` and some usage is on collections (list of datasets) and using the header as a query criteria.
 That's not the intent of that header.
@@ -173,16 +173,16 @@ In addition, there are optional components, which are:
 ### About
 
 The `/about` endpoint returns (GET) information about the service.
-The "about" object has the following:
+The "About" object has the following:
 
 | property    | definition         | attributes    | intent                         |
 |-------------|--------------------|---------------|--------------------------------|
-| lastUpdated | string (date-time) | required      | ... |
-| author      | string (uri)       | required      | ... |
-| repo        | string (uri)       | required      | ... |
-| links       | array-of-objects   | required (0+) | ... |
-| link.name   | string             | required      | ... |
-| link.href   | string             | required      | ... |
+| lastUpdated | string (date-time) | required      | timestamp for last release??   |
+| author      | string (uri)       | required      | website for organization??     |
+| repo        | string (uri)       | required      | why would I share this??       |
+| links       | array-of-objects   | required (0+) | links to various features??    |
+| link.name   | string             | required      | name of link (any stds?)??     |
+| link.href   | string             | required      | URL under service base URL     |
 
 : About properties
 
@@ -190,6 +190,7 @@ I struggle with what the intent is of this object and properties are.
 The `links` property feels like HATEOAS
 
 The version of the API (as mentioned above) will be in the `/docs` resource generated from the OpenAPI spec.
+That said, the About object could represent a machine-readable version of that information.
 The list of capabilities (read-write, snapshots, define, ndjson) could be here but again are available from the spec.
 That said, NDJSON support should be handled via content negotiation and as an optional component, could be specified here as supported or not.
 
@@ -233,7 +234,7 @@ For a clinical (device) study you may only have ADaM datasets (device submission
 I am assuming this list of values on the Study will limit the values used on the datasets under the study.
 
 #### StudyDataset, MetaDataRef, and Snapshot
-StudyDatasets are core part of the API and we cover that next.
+StudyDatasets are a core part of the API and we cover that next.
 Snapshot and MetaDataRef are both part of the optional "Study-Snapshots" and "Define" capabilities.
 
 For the most part, this is a standard REST API for a simple object.
@@ -241,25 +242,25 @@ There are some obvious business rules to consider - creating a study with an exi
 This information would add value to the User's Guide.
 
 I also should look at the ODM-XML definition of a Study or some of the other CDISC REST APIs to verify this object definition (or the intended content of these properties).
-In particular, the `href` property feels like HATEOAS (does this point to the same URL - is this like "_id"?)
+In particular, the `href` property feels like HATEOAS (does this point to the same URL - is this like "_id"?).
 
 There are a few issues when looking at the JSON OpenAPI file.
 
-* There is a default value on studyCreationDateTime of `2025-11-17T20:09:33.999933Z` which seems pretty magical
+* There is a default value on `studyCreationDateTime` of `2025-11-17T20:09:33.999933Z` which seems pretty magical
 * There is a missing `href` definition on StudyRequest even though it is marked as required
 * There is an empty string value option in the `standards` property for StudyRequest
 
-This is also missing a property for study last modified date and time - which is used in various other operations within the API.
+This is also missing a property for study last modified timestamp - which is used in various other operations within the API.
 This also begs the question of why the `standard` isn't part of the Dataset-JSON dataset metadata.
 
 ### Study-Datasets
 This is the core part of the API - how to get Study Datasets as Dataset-JSON objects.
 Part of the challenge with designing a REST API for a Dataset-JSON object is that a Dataset-JSON object contains multiple concepts - dataset metadata, column metadata, and rows of data.
-The REST API could have considered each of these as their own resources but instead makes use of query parameters.
+The REST API could have considered each of these as their own sub-resources but instead makes use of query parameters.
 
-There are N Study-Dataset-related objects - StudyDataset, DatasetJson, RowData
+There are three Study-Dataset-related objects - StudyDataset, DatasetJson, RowData.
 Study-Datasets are identified by the `studyOID` and `itemGroupOID` (called `datasetOID` below) values.
-This concept always relates to the **LATEST** version of the data.
+This concept always relates to the **LATEST** version of the dataset.
 
 | Verb   | URL                                       | Request               | Response               | Operation                         |
 |--------|-------------------------------------------|-----------------------|------------------------|-----------------------------------|
@@ -313,7 +314,8 @@ Frankly, I don't know what changed in the various `1.1.x` releases - and how to 
 I don't get what `href` is supposed to be here (again, feels like "_id" in HATEOAS).
 There are again obvious business rule violations where it would be useful for the User Guide to go over.
 
-The use of both `metadataonly` and `dataonly` (what happens if I set both to true or both to false?) vs the use of subresource URLs or potentially a `format` parameter with values of `metadata`, `data` with a default of both.
+The use of both `metadataonly` and `dataonly` (what happens if I set both to true or both to false?) vs the use of sub-resource URLs or potentially a `format` parameter with values of `metadata`, `data` with a default of both.
+I'm not sure how to represent a `dataonly` DatasetJson object given required property attributes.
 
 There is a whole section on "API Identifiers" as a caution of using HTTP/HTML special characters in your `studyOID` or `itemGroupOID` vs URL-encoding them.
 
@@ -340,9 +342,9 @@ Let's look at some of the other optional API capabilities.
 I've mentioned the potential use of content negotiation for NDJSON support above.
 Looking at the OpenAPI file and the User's Guide, there seem to be two endpoints for getting a dataset as NDJSON.
 
-The subresource `$export` and the subresource `/ndjson` on the Study-Dataset URL can return the Dataset-JSON object as NDJSON.
+The sub-resource `$export` and the sub-resource `/ndjson` on the Study-Dataset URL can return the Dataset-JSON object as NDJSON.
 I think the idea here is to call the first, which creates a job and returns a `Location` header (I'm assuming) to get the data.
-The second subresource is then an example of where the data might be - and if called early returns a 202.
+The second sub-resource is then an example of where the data might be - and if called early returns a 202.
 
 I don't understand why processing the return of the NDJSON version of a dataset would take any longer than the JSON version of the dataset.
 This whole section and use case don't make sense to me.
@@ -351,17 +353,17 @@ This whole section and use case don't make sense to me.
 
 I was thrilled to see this added but am worried that this brings up other concerns.
 Most back-end systems for clinical trial data have both source code *AND DATA* version control.
-All data updates create a new version (integer counter), and at given points, the data in a study can get tagged.
+All data updates create a new version (integer counter or commit hash), and at given points, the data in a study can get tagged.
 My experience is that this has been used to tag versions of SDTM or ADaM datasets used in various versions of a CSR.
 The labels will be things like "csr_1" or "csr_final" but again can be anything.
 There are times that the label will need to be moved to a different version of a dataset - rare but done under GXP processes.
-It is literally a tag on the data.
+It is literally a tag across the dataset versions within a study.
 
 But this also makes me realize that there is nothing in Dataset-JSON nor this API that deals with version of data.
 There is only a timestamp.
 Which is important - but also can be related to a version that is an integer or commit hash.
-I'd want to see what dataset versions the label has been applied to.
-I'd also want to see - for a given version of the dataset - what labels it might have.
+I'd want to see what dataset versions the label has been applied to across the study.
+I'd also want to see - for a given version of the dataset - all the labels it might have.
 
 I'm not going to go through this part of the API as I did above - I don't think it's worth it at this point.
 
