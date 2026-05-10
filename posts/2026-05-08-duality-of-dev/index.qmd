@@ -1,0 +1,96 @@
+---
+title: "The duality of development"
+description: "succeeding vs not failing"
+image: yin-yang.png
+date: 2026-05-08
+categories: 
+  - "agile"
+  - "development"
+---
+
+## Oldies and Goodies
+
+I started this blog back in 2010 by capturing a bunch of stuff that I was saying over and over during my consulting gigs.
+Most of them have aged pretty well - you're here already so check them out later and let me know.
+
+This is another of those that I just realized I've not actually ever posted.
+It recently came up at [Minnebar20](https://minnestar.org/minnebar/) in a [session](https://sessions.minnestar.org/sessions/1922) from [Jamie Ryan](https://www.jlryanconsulting.com) on risk management via smart small steps - so thanks to her for getting me in action here.
+
+I also feel this more in an age of "AI" coding tools.
+
+## Two Hard Problems in Computer Science
+
+So... [naming things is hard](https://martinfowler.com/bliki/TwoHardThings.html) and I don't know what to call these two aspects of software development.
+So let me start with an analogy from art.
+
+## Art School
+
+::: {.callout-caution collapse="true"}
+## musical reference because that is how my brain works
+{{<video https://youtu.be/PzWAO9Xmx9Y?si=ZK5kXnqeT51ks3si >}}
+:::
+
+Some art is _additive_ - painting for example - in that the artist keeps adding to an empty canvas.
+
+Some art is _subtractive_ - sculpting is the classic example - in the artist keeps subtracting to get to the finished piece.
+
+In the same sense, I think some parts of coding are "building" and some parts of coding are "engineering".
+
+## No Question (So Many Questions)
+
+::: {.callout-caution collapse="true"}
+## another musical reference, because it's all about the songs of my youth
+{{<video https://youtu.be/bKyVQid8Ch4?si=DCanoGjVAW4m6yhe >}}
+:::
+
+In the end, instead of defining these two aspects (I can't even name them well) - I feel like each aspect has its set of questions.
+
+On the building side, we have:
+
+* What are we building?
+* How do we solve this problem / implement this?
+* How can we make this better - how to optimize?
+* Is this meeting the customer needs?
+* Is this getting used?
+* Are we doing the right job? (QA - see [another old blog post](../2010-01-25-qa-versus-qc/))
+* How do we teach the system - to users, to developers, to administrators, to installers?
+
+and on the engineering side, we have:
+
+* What could go wrong here?
+* What are we missing here?
+* What are the risks? How to mitigate those?
+* Are we doing the job right? (QC)
+* How do we make sure the code is correct? stays correct?
+* How do we know the system as a whole works?
+* How do we make this secure?
+* How do we make this performant?
+
+There are more questions (so many questions) that could go into this.
+In the end, the building side is the "let's succeed" side.
+The engineering side is a "let's not fail" side.
+
+Perhaps those are the names I was looking for all along.
+
+## Which side are you on?
+
+::: {.callout-caution collapse="true"}
+## last musical reference, I swear
+{{<video https://youtu.be/pl9kcJ6RRmU?si=u8meZdb3u-7seX6U >}}
+:::
+
+I think everyone has a natural tendency to default to one side or the other - their "strong" side.
+I know that mine is the "engineering" side.
+It's why I've been so involved in testing frameworks, I think.
+But it's important to grow, in any computing vocation, in both sides.
+Particularly, for computational biology, moving from developing scripts to developing packages (that others use) is adding to your engineering side.
+
+This also feels like it applies to science in general - at least I see it in biology.
+And I see my default side come out in the questions I ask when reviewing a biology paper.
+I'm fortunate enough to have worked with some exceptional biologists that designed sets of experiments on both sides of the key scientific question
+(how many shRNAs are needed to reliably knock-down a gene? does it depend on transcript lengths?).
+
+The other cross-cutting aspect to this is **how** you execute those building and engineering skills.
+That is "the process" to each side - and that there is probably a light-weight vs heavy-weight scale to this (or just recognizing that you add weight as risk and / or team-size go up).
+
+But that might be my "let's not fail" side speaking.
