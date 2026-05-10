@@ -1,91 +1,95 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://brianrepko.github.io/blog/posts/2010-01-25-when-is-a-story-prepared/index.html</loc>
-    <lastmod>2026-03-14T19:09:17.378Z</lastmod>
-  </url>
-  <url>
-    <loc>https://brianrepko.github.io/blog/posts/2010-02-26-extreme-distributed-scrum-daily-standup/index.html</loc>
-    <lastmod>2026-03-14T19:09:17.379Z</lastmod>
-  </url>
-  <url>
-    <loc>https://brianrepko.github.io/blog/posts/2010-09-02-jbehave-3-0-released/index.html</loc>
-    <lastmod>2026-03-14T19:09:17.380Z</lastmod>
-  </url>
-  <url>
-    <loc>https://brianrepko.github.io/blog/posts/2025-10-31-blogging-for-real/index.html</loc>
-    <lastmod>2026-03-14T19:09:17.381Z</lastmod>
-  </url>
-  <url>
-    <loc>https://brianrepko.github.io/blog/posts/2010-04-12-jbehave-presentation-for-twin-cities-java-users-group/index.html</loc>
-    <lastmod>2026-03-14T19:09:17.379Z</lastmod>
-  </url>
-  <url>
-    <loc>https://brianrepko.github.io/blog/posts/2010-01-27-connecting-agile-teams-one-pink-post-it-at-a-time/index.html</loc>
-    <lastmod>2026-03-14T19:09:17.378Z</lastmod>
-  </url>
-  <url>
-    <loc>https://brianrepko.github.io/blog/posts/2026-02-26-edgepython-and-ai/index.html</loc>
-    <lastmod>2026-03-14T19:09:17.383Z</lastmod>
-  </url>
-  <url>
-    <loc>https://brianrepko.github.io/blog/posts/2010-01-25-what-is-software-architecture/index.html</loc>
-    <lastmod>2026-03-14T19:09:17.378Z</lastmod>
-  </url>
-  <url>
-    <loc>https://brianrepko.github.io/blog/posts/2025-12-20-tiledb-snowflake/index.html</loc>
-    <lastmod>2026-03-14T19:09:17.381Z</lastmod>
-  </url>
-  <url>
-    <loc>https://brianrepko.github.io/blog/posts/2010-09-22-slides-from-practical-agility-jbehave-and-fit-goodbadugly/index.html</loc>
-    <lastmod>2026-03-14T19:09:17.380Z</lastmod>
-  </url>
-  <url>
-    <loc>https://brianrepko.github.io/blog/posts/2025-11-06-quarto-gherkin/index.html</loc>
-    <lastmod>2026-03-14T19:09:17.381Z</lastmod>
-  </url>
-  <url>
     <loc>https://brianrepko.github.io/blog/index.html</loc>
-    <lastmod>2026-03-14T19:09:17.377Z</lastmod>
+    <lastmod>2026-05-10T19:07:11.078Z</lastmod>
   </url>
   <url>
-    <loc>https://brianrepko.github.io/blog/posts/2025-12-31-datasetjson-part1/index.html</loc>
-    <lastmod>2026-03-14T19:09:17.382Z</lastmod>
+    <loc>https://brianrepko.github.io/blog/posts/2026-05-08-duality-of-dev/index.html</loc>
+    <lastmod>2026-05-10T19:07:11.085Z</lastmod>
   </url>
   <url>
     <loc>https://brianrepko.github.io/blog/posts/2026-03-11-datasetjson-part3/index.html</loc>
-    <lastmod>2026-03-14T19:09:17.383Z</lastmod>
+    <lastmod>2026-05-10T19:07:11.085Z</lastmod>
   </url>
   <url>
-    <loc>https://brianrepko.github.io/blog/posts/2026-01-15-datasetjson-part2/index.html</loc>
-    <lastmod>2026-03-14T19:09:17.382Z</lastmod>
+    <loc>https://brianrepko.github.io/blog/posts/2025-12-31-datasetjson-part1/index.html</loc>
+    <lastmod>2026-05-10T19:07:11.083Z</lastmod>
   </url>
   <url>
-    <loc>https://brianrepko.github.io/blog/posts/2010-07-21-extending-jasypt-aes-and-blowfish-support/index.html</loc>
-    <lastmod>2026-03-14T19:09:17.380Z</lastmod>
+    <loc>https://brianrepko.github.io/blog/posts/2025-10-31-blogging-for-real/index.html</loc>
+    <lastmod>2026-05-10T19:07:11.083Z</lastmod>
   </url>
   <url>
-    <loc>https://brianrepko.github.io/blog/posts/2010-02-19-making-ant-1-8-work-like-maven-not-so-much/index.html</loc>
-    <lastmod>2026-03-14T19:09:17.379Z</lastmod>
+    <loc>https://brianrepko.github.io/blog/posts/2010-01-25-what-is-software-architecture/index.html</loc>
+    <lastmod>2026-05-10T19:07:11.079Z</lastmod>
   </url>
   <url>
-    <loc>https://brianrepko.github.io/blog/posts/2019-04-09-snowflake-for-biomedical-research/index.html</loc>
-    <lastmod>2026-03-14T19:09:17.381Z</lastmod>
+    <loc>https://brianrepko.github.io/blog/posts/2025-11-06-quarto-gherkin/index.html</loc>
+    <lastmod>2026-05-10T19:07:11.083Z</lastmod>
   </url>
   <url>
-    <loc>https://brianrepko.github.io/blog/posts/2010-01-25-discovering-software-architecture/index.html</loc>
-    <lastmod>2026-03-14T19:09:17.377Z</lastmod>
+    <loc>https://brianrepko.github.io/blog/posts/2025-12-20-tiledb-snowflake/index.html</loc>
+    <lastmod>2026-05-10T19:07:11.083Z</lastmod>
   </url>
   <url>
     <loc>https://brianrepko.github.io/blog/posts/2010-01-27-scrum-and-kanban-together/index.html</loc>
-    <lastmod>2026-03-14T19:09:17.379Z</lastmod>
+    <lastmod>2026-05-10T19:07:11.080Z</lastmod>
+  </url>
+  <url>
+    <loc>https://brianrepko.github.io/blog/posts/2010-01-25-when-is-a-story-prepared/index.html</loc>
+    <lastmod>2026-05-10T19:07:11.080Z</lastmod>
+  </url>
+  <url>
+    <loc>https://brianrepko.github.io/blog/posts/2010-02-26-extreme-distributed-scrum-daily-standup/index.html</loc>
+    <lastmod>2026-05-10T19:07:11.080Z</lastmod>
   </url>
   <url>
     <loc>https://brianrepko.github.io/blog/posts/2014-09-28-blogging-again-with-a-change-of-focus/index.html</loc>
-    <lastmod>2026-03-14T19:09:17.381Z</lastmod>
+    <lastmod>2026-05-10T19:07:11.082Z</lastmod>
+  </url>
+  <url>
+    <loc>https://brianrepko.github.io/blog/posts/2010-07-21-extending-jasypt-aes-and-blowfish-support/index.html</loc>
+    <lastmod>2026-05-10T19:07:11.081Z</lastmod>
   </url>
   <url>
     <loc>https://brianrepko.github.io/blog/posts/2010-01-25-qa-versus-qc/index.html</loc>
-    <lastmod>2026-03-14T19:09:17.378Z</lastmod>
+    <lastmod>2026-05-10T19:07:11.079Z</lastmod>
+  </url>
+  <url>
+    <loc>https://brianrepko.github.io/blog/posts/2010-02-19-making-ant-1-8-work-like-maven-not-so-much/index.html</loc>
+    <lastmod>2026-05-10T19:07:11.080Z</lastmod>
+  </url>
+  <url>
+    <loc>https://brianrepko.github.io/blog/posts/2026-01-15-datasetjson-part2/index.html</loc>
+    <lastmod>2026-05-10T19:07:11.084Z</lastmod>
+  </url>
+  <url>
+    <loc>https://brianrepko.github.io/blog/posts/2010-01-27-connecting-agile-teams-one-pink-post-it-at-a-time/index.html</loc>
+    <lastmod>2026-05-10T19:07:11.080Z</lastmod>
+  </url>
+  <url>
+    <loc>https://brianrepko.github.io/blog/posts/2010-04-12-jbehave-presentation-for-twin-cities-java-users-group/index.html</loc>
+    <lastmod>2026-05-10T19:07:11.081Z</lastmod>
+  </url>
+  <url>
+    <loc>https://brianrepko.github.io/blog/posts/2019-04-09-snowflake-for-biomedical-research/index.html</loc>
+    <lastmod>2026-05-10T19:07:11.082Z</lastmod>
+  </url>
+  <url>
+    <loc>https://brianrepko.github.io/blog/posts/2026-02-26-edgepython-and-ai/index.html</loc>
+    <lastmod>2026-05-10T19:07:11.084Z</lastmod>
+  </url>
+  <url>
+    <loc>https://brianrepko.github.io/blog/posts/2010-09-22-slides-from-practical-agility-jbehave-and-fit-goodbadugly/index.html</loc>
+    <lastmod>2026-05-10T19:07:11.081Z</lastmod>
+  </url>
+  <url>
+    <loc>https://brianrepko.github.io/blog/posts/2010-09-02-jbehave-3-0-released/index.html</loc>
+    <lastmod>2026-05-10T19:07:11.081Z</lastmod>
+  </url>
+  <url>
+    <loc>https://brianrepko.github.io/blog/posts/2010-01-25-discovering-software-architecture/index.html</loc>
+    <lastmod>2026-05-10T19:07:11.079Z</lastmod>
   </url>
 </urlset>
